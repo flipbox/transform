@@ -1,0 +1,19 @@
+{
+  "name": "flipboxdigital/transform",
+  "description": "Transform complex data structures into simple arrays",
+  "version": "1.0.0",
+  "require": {
+    "php": ">=7.0.0"
+  },
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://asset-packagist.org"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "flipbox\\transform\\": "src/"
+    }
+  }
+}
