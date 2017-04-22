@@ -18,13 +18,13 @@ use flipbox\transform\Scope;
  * @author Flipbox Factory <hello@flipboxfactory.com>
  * @since 1.0.0
  */
-abstract class AbstractResourceTransformer extends AbstractTransformer
+abstract class AbstractResourceTransformer extends AbstractTransformer implements ResourceTransformerInterface
 {
 
     /**
      * @var mixed
      */
-    public $data;
+    protected $data;
 
     /**
      * @var callable|TransformerInterface
@@ -39,19 +39,32 @@ abstract class AbstractResourceTransformer extends AbstractTransformer
 
     /**
      * @param Scope $scope
+     * @return mixed
+     */
+    protected function getData(Scope $scope)
+    {
+        return $this->data;
+    }
+
+    /**
+     * @param Scope $scope
      * @param string|null $identifier
      * @return mixed
      */
     public function transform(Scope $scope, string $identifier = null)
     {
 
+        $childScope = $scope->childScope($identifier);
+
         $resource = $this->createResource(
-            $scope->childScope($identifier)
+            $childScope
         );
 
         return $resource->transform(
             $this->transformer,
-            $this->data
+            $this->getData(
+                $childScope
+            )
         );
 
     }
@@ -63,6 +76,16 @@ abstract class AbstractResourceTransformer extends AbstractTransformer
     public function setTransformer(callable $transformer)
     {
         $this->transformer = $transformer;
+        return $this;
+    }
+
+    /**
+     * @param mixed $data
+     * @return $this
+     */
+    public function setData($data)
+    {
+        $this->data = $data;
         return $this;
     }
 
