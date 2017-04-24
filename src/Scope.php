@@ -246,7 +246,7 @@ class Scope
         return new Scope(
             $this->getTransform(),
             $identifier,
-            array_filter($parentScopes)
+            $parentScopes
         );
 
     }
