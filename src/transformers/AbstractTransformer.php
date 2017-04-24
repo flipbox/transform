@@ -22,11 +22,6 @@ abstract class AbstractTransformer implements TransformerInterface
 {
 
     /**
-     * @var Scope
-     */
-    protected $scope;
-
-    /**
      * @param array $config
      */
     public function __construct(array $config = [])
@@ -40,15 +35,6 @@ abstract class AbstractTransformer implements TransformerInterface
     public function getIncludes(): array
     {
         return [];
-    }
-
-    /**
-     * @param null $key
-     * @return \flipbox\transform\ParamBag|null
-     */
-    protected function getParams($key = null)
-    {
-        return $this->scope->getParams($key);
     }
 
     /**
@@ -76,8 +62,7 @@ abstract class AbstractTransformer implements TransformerInterface
      */
     public function __invoke($data, Scope $scope, string $identifier = null)
     {
-        $this->scope = $scope;
-        return $this->transform($data, $identifier);
+        return $this->transform($data, $scope, $identifier);
     }
 
 }
