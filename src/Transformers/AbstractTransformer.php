@@ -1,26 +1,23 @@
 <?php
 
 /**
- * @package   Transform
  * @author    Flipbox Factory
  * @copyright Copyright (c) 2017, Flipbox Digital
  * @link      https://github.com/flipbox/transform/releases/latest
  * @license   https://github.com/flipbox/transform/blob/master/LICENSE
  */
 
-namespace flipbox\transform\transformers;
+namespace Flipbox\Transform\Transformers;
 
-use flipbox\transform\helpers\Object as ObjectHelper;
-use flipbox\transform\Scope;
+use Flipbox\Transform\Helpers\Object as ObjectHelper;
+use Flipbox\Transform\Scope;
 
 /**
- * @package flipbox\transform\transformers
  * @author Flipbox Factory <hello@flipboxfactory.com>
  * @since 1.0.0
  */
 abstract class AbstractTransformer implements TransformerInterface
 {
-
     /**
      * @param array $config
      */
@@ -64,5 +61,4 @@ abstract class AbstractTransformer implements TransformerInterface
     {
         return $this->transform($data, $scope, $identifier);
     }
-
 }

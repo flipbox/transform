@@ -1,26 +1,23 @@
 <?php
 
 /**
- * @package   Transform
  * @author    Flipbox Factory
  * @copyright Copyright (c) 2017, Flipbox Digital
  * @link      https://github.com/flipbox/transform/releases/latest
  * @license   https://github.com/flipbox/transform/blob/master/LICENSE
  */
 
-namespace flipbox\transform;
+namespace Flipbox\Transform;
 
 use ArrayAccess;
 use IteratorAggregate;
 
 /**
- * @package flipbox\transform
  * @author Flipbox Factory <hello@flipboxfactory.com>
  * @since 1.0.0
  */
 class ParamBag implements ArrayAccess, IteratorAggregate
 {
-
     /**
      * @var array
      */
@@ -161,5 +158,4 @@ class ParamBag implements ArrayAccess, IteratorAggregate
     {
         return new \ArrayIterator($this->params);
     }
-
 }

@@ -1,27 +1,24 @@
 <?php
 
 /**
- * @package   Transform
  * @author    Flipbox Factory
  * @copyright Copyright (c) 2017, Flipbox Digital
  * @link      https://github.com/flipbox/transform/releases/latest
  * @license   https://github.com/flipbox/transform/blob/master/LICENSE
  */
 
-namespace flipbox\transform\transformers;
+namespace Flipbox\Transform\Transformers;
 
-use flipbox\transform\resources\Collection as CollectionResource;
-use flipbox\transform\resources\ResourceInterface;
-use flipbox\transform\Scope;
+use Flipbox\Transform\Resources\Collection as CollectionResource;
+use Flipbox\Transform\Resources\ResourceInterface;
+use Flipbox\Transform\Scope;
 
 /**
- * @package flipbox\transform\transformers
  * @author Flipbox Factory <hello@flipboxfactory.com>
  * @since 1.0.0
  */
 class Collection extends AbstractResourceTransformer
 {
-
     /**
      * @param Scope $scope
      * @return ResourceInterface
@@ -30,5 +27,4 @@ class Collection extends AbstractResourceTransformer
     {
         return new CollectionResource($scope);
     }
-
 }

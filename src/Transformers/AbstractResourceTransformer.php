@@ -1,26 +1,23 @@
 <?php
 
 /**
- * @package   Transform
  * @author    Flipbox Factory
  * @copyright Copyright (c) 2017, Flipbox Digital
  * @link      https://github.com/flipbox/transform/releases/latest
  * @license   https://github.com/flipbox/transform/blob/master/LICENSE
  */
 
-namespace flipbox\transform\transformers;
+namespace Flipbox\Transform\Transformers;
 
-use flipbox\transform\resources\ResourceInterface;
-use flipbox\transform\Scope;
+use Flipbox\Transform\Resources\ResourceInterface;
+use Flipbox\Transform\Scope;
 
 /**
- * @package flipbox\transform\transformers
  * @author Flipbox Factory <hello@flipboxfactory.com>
  * @since 1.0.0
  */
 abstract class AbstractResourceTransformer extends AbstractTransformer implements ResourceTransformerInterface
 {
-
     /**
      * @var mixed
      */
@@ -53,7 +50,6 @@ abstract class AbstractResourceTransformer extends AbstractTransformer implement
      */
     public function transform(Scope $scope, string $identifier = null)
     {
-
         $childScope = $scope->childScope($identifier);
 
         $resource = $this->createResource(
@@ -66,7 +62,6 @@ abstract class AbstractResourceTransformer extends AbstractTransformer implement
                 $childScope
             )
         );
-
     }
 
     /**
@@ -96,5 +91,4 @@ abstract class AbstractResourceTransformer extends AbstractTransformer implement
     {
         return $this->transform($scope, $identifier);
     }
-
 }

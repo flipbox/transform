@@ -1,25 +1,22 @@
 <?php
 
 /**
- * @package   Transform
  * @author    Flipbox Factory
  * @copyright Copyright (c) 2017, Flipbox Digital
  * @link      https://github.com/flipbox/transform/releases/latest
  * @license   https://github.com/flipbox/transform/blob/master/LICENSE
  */
 
-namespace flipbox\transform;
+namespace Flipbox\Transform;
 
-use flipbox\transform\helpers\Object as ObjectHelper;
+use Flipbox\Transform\Helpers\Object as ObjectHelper;
 
 /**
- * @package flipbox\transform
  * @author Flipbox Factory <hello@flipboxfactory.com>
  * @since 1.0.0
  */
 class Transform
 {
-
     /**
      * The character used to separate modifier parameters.
      *
@@ -118,7 +115,6 @@ class Transform
         }
 
         foreach ($includes as $include) {
-
             list($includeName, $allModifiersStr) = array_pad(explode(':', $include, 2), 2, null);
 
             // Trim it down to a cool level of recursion
@@ -161,7 +157,6 @@ class Transform
         $this->autoIncludeParents();
 
         return $this;
-
     }
 
     /*******************************************
@@ -230,10 +225,8 @@ class Transform
         $this->fields = [];
 
         foreach ($fields as $type => $field) {
-
             //Remove empty and repeated fields
             $this->fields[$type] = array_unique(array_filter(explode(',', $field)));
-
         }
 
         return $this;
@@ -275,7 +268,6 @@ class Transform
      */
     protected function autoIncludeParents()
     {
-
         $parsed = [];
 
         foreach ($this->includes as $include) {
@@ -291,7 +283,6 @@ class Transform
         }
 
         $this->includes = array_values(array_unique($parsed));
-
     }
 
     /**
@@ -307,5 +298,4 @@ class Transform
     {
         return implode('.', array_slice(explode('.', $includeName), 0, $this->recursionLimit));
     }
-
 }

@@ -1,25 +1,22 @@
 <?php
 
 /**
- * @package   Transform
- * @author    Flipbox Transform
+ * @author    Flipbox Factory
  * @copyright Copyright (c) 2017, Flipbox Digital
  * @link      https://github.com/flipbox/transform/releases/latest
  * @license   https://github.com/flipbox/transform/blob/master/LICENSE
  */
 
-namespace flipbox\transform;
+namespace Flipbox\Transform;
 
-use flipbox\transform\transformers\TransformerInterface;
+use Flipbox\Transform\Transformers\TransformerInterface;
 
 /**
- * @package flipbox\transform
- * @author Flipbox Transform <hello@flipboxfactory.com>
+ * @author Flipbox Factory <hello@flipboxfactory.com>
  * @since 1.0.0
  */
 class Scope
 {
-
     /**
      * @var string
      */
@@ -158,7 +155,6 @@ class Scope
      */
     public function transform(callable $transformer, $data): array
     {
-
         $includedData = [];
 
         // Transform data
@@ -175,20 +171,16 @@ class Scope
         }
 
         foreach ($transformedData as $key => $val) {
-
             if (!$this->includeValue($transformer, $key)) {
                 continue;
             }
-
             $includedData[$key] = $this->parseValue($val, $data, $key);
-
         }
 
         // Return only the requested fields
         $includedData = $this->filterFields($includedData);
 
         return $includedData;
-
     }
 
     /**
@@ -198,7 +190,6 @@ class Scope
      */
     protected function includeValue(callable $transformer, string $key): bool
     {
-
         // Ignore optional (that have not been explicitly requested)
         if ($transformer instanceof TransformerInterface && in_array($key, $transformer->getIncludes(), true) && !$this->isRequested($key)) {
             return false;
@@ -210,7 +201,6 @@ class Scope
         }
 
         return true;
-
     }
 
     /**
@@ -221,16 +211,11 @@ class Scope
      */
     protected function parseValue($val, $data, string $key = null)
     {
-
-
         if (is_callable($val)) {
-
             return call_user_func_array($val, [$data, $this, $key]);
-
         }
 
         return $val;
-
     }
 
     /**
@@ -239,7 +224,6 @@ class Scope
      */
     public function childScope(string $identifier): Scope
     {
-
         $parentScopes = $this->getParentScopes();
         $parentScopes[] = $this->getScopeIdentifier();
 
@@ -248,7 +232,6 @@ class Scope
             $identifier,
             $parentScopes
         );
-
     }
 
     /**
@@ -273,7 +256,6 @@ class Scope
      */
     protected function filterFields(array $data): array
     {
-
         $fields = $this->getFilterFields();
 
         if ($fields === null) {
@@ -286,7 +268,6 @@ class Scope
                 iterator_to_array($fields)
             )
         );
-
     }
 
     /**
@@ -309,7 +290,6 @@ class Scope
      */
     private function _scopeString(string $checkScopeSegment): string
     {
-
         if ($this->parentScopes) {
             $scopeArray = array_slice($this->parentScopes, 1);
             array_push($scopeArray, $this->scopeIdentifier, $checkScopeSegment);
@@ -318,7 +298,5 @@ class Scope
         }
 
         return implode('.', (array)$scopeArray);
-
     }
-
 }
