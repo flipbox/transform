@@ -1,4 +1,4 @@
-# HubSpot Http
+# Transform
 [![Latest Version](https://img.shields.io/github/release/flipbox/transform.svg?style=flat-square)](https://github.com/flipbox/transform/releases)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
 [![Build Status](https://img.shields.io/travis/flipbox/transform/master.svg?style=flat-square)](https://travis-ci.org/flipbox/transform)
@@ -20,6 +20,36 @@ composer require flipboxdigital/transform
 
 ``` bash
 $ ./vendor/bin/phpunit
+```
+
+## Usage
+
+```php
+$raw = [
+    'firstName' => 'foo',
+    'lastName' => 'bar',
+    'dateCreated' => new \DateTime(),
+    'dateUpdated' => new \DateTime()
+];
+
+$data = Flipbox\Transform\Factory::item()
+    ->transform(
+        function($data) {
+
+            return [
+                'name' => [
+                    'first' => $data['firstName'],
+                    'last' => $data['firstName']
+                ],
+                'date' => [
+                    'created' => $data['dateCreated']->format('c'),
+                    'updated' => $data['dateUpdated']->format('c')
+                ]
+            ];
+
+        },
+        $raw
+    );
 ```
 
 ## Contributing
