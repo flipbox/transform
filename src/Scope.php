@@ -194,7 +194,10 @@ class Scope
     protected function includeValue(callable $transformer, string $key): bool
     {
         // Ignore optional (that have not been explicitly requested)
-        if ($transformer instanceof TransformerInterface && in_array($key, $transformer->getIncludes(), true) && !$this->isRequested($key)) {
+        if ($transformer instanceof TransformerInterface &&
+            in_array($key, $transformer->getIncludes(), true) &&
+            !$this->isRequested($key)
+        ) {
             return false;
         }
 
