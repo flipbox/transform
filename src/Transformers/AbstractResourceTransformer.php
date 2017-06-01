@@ -32,7 +32,7 @@ abstract class AbstractResourceTransformer extends AbstractTransformer implement
      * @param Scope $scope
      * @return ResourceInterface
      */
-    protected abstract function createResource(Scope $scope): ResourceInterface;
+    abstract protected function createResource(Scope $scope): ResourceInterface;
 
     /**
      * @param Scope $scope

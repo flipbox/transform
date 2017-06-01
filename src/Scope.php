@@ -38,8 +38,11 @@ class Scope
      * @param string|null $scopeIdentifier
      * @param array $parentScopes
      */
-    public function __construct(Transform $transform, string $scopeIdentifier = null, array $parentScopes = [])
-    {
+    public function __construct(
+        Transform $transform,
+        string $scopeIdentifier = null,
+        array $parentScopes = []
+    ) {
         $this->transform = $transform;
         $this->scopeIdentifier = $scopeIdentifier;
         $this->parentScopes = $parentScopes;
@@ -121,7 +124,7 @@ class Scope
     public function isRequested($checkScopeSegment): bool
     {
         return in_array(
-            $this->_scopeString($checkScopeSegment),
+            $this->scopeString($checkScopeSegment),
             $this->transform->getIncludes()
         );
     }
@@ -143,7 +146,7 @@ class Scope
     public function isExcluded($checkScopeSegment): bool
     {
         return in_array(
-            $this->_scopeString($checkScopeSegment),
+            $this->scopeString($checkScopeSegment),
             $this->transform->getExcludes()
         );
     }
@@ -288,7 +291,7 @@ class Scope
      * @param string $checkScopeSegment
      * @return string
      */
-    private function _scopeString(string $checkScopeSegment): string
+    private function scopeString(string $checkScopeSegment): string
     {
         if ($this->parentScopes) {
             $scopeArray = array_slice($this->parentScopes, 1);

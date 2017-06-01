@@ -29,7 +29,7 @@ abstract class AbstractResource implements ResourceInterface
      * @param $data
      * @return null|array
      */
-    public abstract function transform(callable $transformer, $data);
+    abstract public function transform(callable $transformer, $data);
 
     /**
      * @param Scope $scope
