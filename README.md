@@ -6,7 +6,7 @@
 [![Quality Score](https://img.shields.io/scrutinizer/g/flipbox/transform.svg?style=flat-square)](https://scrutinizer-ci.com/g/flipbox/transform)
 [![Total Downloads](https://img.shields.io/packagist/dt/flipboxdigital/transform.svg?style=flat-square)](https://packagist.org/packages/league/transform)
 
-This package provides simple way to transform complex data into multi-dimensional arrays.
+This package provides simple way to transform data.
 
 ## Installation
 

@@ -168,11 +168,6 @@ class Scope
             return $includedData;
         }
 
-        // Conform to array
-        if (!is_array($transformedData)) {
-            $transformedData = [$transformedData];
-        }
-
         foreach ($transformedData as $key => $val) {
             if (!$this->includeValue($transformer, $key)) {
                 continue;
