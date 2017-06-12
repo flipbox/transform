@@ -216,6 +216,16 @@ class Scope
     }
 
     /**
+     * Check, if this is the root scope.
+     *
+     * @return bool
+     */
+    protected function isRootScope(): bool
+    {
+        return empty($this->parentScopes);
+    }
+
+    /**
      * Filter the provided data with the requested filter fields for
      * the scope resource
      *
@@ -237,16 +247,6 @@ class Scope
                 iterator_to_array($fields)
             )
         );
-    }
-
-    /**
-     * Check, if this is the root scope.
-     *
-     * @return bool
-     */
-    protected function isRootScope(): bool
-    {
-        return empty($this->parentScopes);
     }
 
     /**
