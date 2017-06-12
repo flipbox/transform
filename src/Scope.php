@@ -154,31 +154,11 @@ class Scope
     /**
      * @param TransformerInterface|callable $transformer
      * @param mixed $data
-     * @return array
+     * @return mixed
      */
-    public function transform(callable $transformer, $data): array
+    public function transform(callable $transformer, $data)
     {
-        $includedData = [];
-
-        // Transform data
-        $transformedData = $this->parseValue($transformer, $data);
-
-        // Bail now
-        if (null === $transformedData) {
-            return $includedData;
-        }
-
-        foreach ($transformedData as $key => $val) {
-            if (!$this->includeValue($transformer, $key)) {
-                continue;
-            }
-            $includedData[$key] = $this->parseValue($val, $data, $key);
-        }
-
-        // Return only the requested fields
-        $includedData = $this->filterFields($includedData);
-
-        return $includedData;
+        return $this->parseValue($transformer, $data);
     }
 
     /**
@@ -186,7 +166,7 @@ class Scope
      * @param string $key
      * @return bool
      */
-    protected function includeValue(callable $transformer, string $key): bool
+    public function includeValue(callable $transformer, string $key): bool
     {
         // Ignore optional (that have not been explicitly requested)
         if ($transformer instanceof TransformerInterface &&
@@ -208,9 +188,9 @@ class Scope
      * @param $val
      * @param $data
      * @param string|null $key
-     * @return array|string|null
+     * @return mixed
      */
-    protected function parseValue($val, $data, string $key = null)
+    public function parseValue($val, $data, string $key = null)
     {
         if (is_callable($val)) {
             return call_user_func_array($val, [$data, $this, $key]);
@@ -228,7 +208,7 @@ class Scope
         $parentScopes = $this->getParentScopes();
         $parentScopes[] = $this->getScopeIdentifier();
 
-        return new Scope(
+        return new static(
             $this->getTransform(),
             $identifier,
             $parentScopes
@@ -236,26 +216,14 @@ class Scope
     }
 
     /**
-     * Check, if this is the root scope.
-     *
-     * @return bool
-     */
-    protected function isRootScope(): bool
-    {
-        return empty($this->parentScopes);
-    }
-
-    /**
      * Filter the provided data with the requested filter fields for
      * the scope resource
-     *
-     * @internal
      *
      * @param array $data
      *
      * @return array
      */
-    protected function filterFields(array $data): array
+    public function filterFields(array $data): array
     {
         $fields = $this->getFilterFields();
 
@@ -269,6 +237,16 @@ class Scope
                 iterator_to_array($fields)
             )
         );
+    }
+
+    /**
+     * Check, if this is the root scope.
+     *
+     * @return bool
+     */
+    protected function isRootScope(): bool
+    {
+        return empty($this->parentScopes);
     }
 
     /**

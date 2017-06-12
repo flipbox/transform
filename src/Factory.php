@@ -9,8 +9,7 @@
 
 namespace Flipbox\Transform;
 
-use Flipbox\Transform\Resources\Collection;
-use Flipbox\Transform\Resources\Item;
+use Flipbox\Transform\Transformers\TransformerInterface;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
@@ -19,28 +18,33 @@ use Flipbox\Transform\Resources\Item;
 class Factory
 {
     /**
+     * @param callable|TransformerInterface $transformer
+     * @param $data
      * @param array $config
-     * @return Collection
+     * @return array|null
      */
-    public static function collection(array $config = []): Collection
+    public static function collection(callable $transformer, $data, array $config = [])
     {
-        return new Collection(
-            new Scope(
-                new Transform($config)
-            )
-        );
+        return self::transform($config)->collection($transformer, $data);
+    }
+
+    /**
+     * @param callable|TransformerInterface $transformer
+     * @param $data
+     * @param array $config
+     * @return array|null
+     */
+    public static function item(callable $transformer, $data, array $config = [])
+    {
+        return self::transform($config)->item($transformer, $data);
     }
 
     /**
      * @param array $config
-     * @return Item
+     * @return Transform
      */
-    public static function item(array $config = []): Item
+    public static function transform(array $config = []): Transform
     {
-        return new Item(
-            new Scope(
-                new Transform($config)
-            )
-        );
+        return new Transform($config);
     }
 }

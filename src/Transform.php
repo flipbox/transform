@@ -9,6 +9,8 @@
 
 namespace Flipbox\Transform;
 
+use Flipbox\Transform\Resources\Collection;
+use Flipbox\Transform\Resources\Item;
 use Flipbox\Transform\Helpers\Object as ObjectHelper;
 
 /**
@@ -255,6 +257,36 @@ class Transform
             null :
             new ParamBag($this->fields[$type]);
     }
+
+
+    /*******************************************
+     * RESOURCES
+     *******************************************/
+
+    /**
+     * @param callable $transformer
+     * @param $data
+     * @return mixed
+     */
+    public function item(callable $transformer, $data)
+    {
+        return (new Item(
+            new Scope($this)
+        ))->transform($transformer, $data);
+    }
+
+    /**
+     * @param callable $transformer
+     * @param $data
+     * @return mixed
+     */
+    public function collection(callable $transformer, $data)
+    {
+        return (new Collection(
+            new Scope($this)
+        ))->transform($transformer, $data);
+    }
+
 
     /**
      * Auto-include Parents

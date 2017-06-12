@@ -4,7 +4,7 @@
 [![Build Status](https://img.shields.io/travis/flipbox/transform/master.svg?style=flat-square)](https://travis-ci.org/flipbox/transform)
 [![Coverage Status](https://img.shields.io/scrutinizer/coverage/g/flipbox/transform.svg?style=flat-square)](https://scrutinizer-ci.com/g/flipbox/transform/code-structure)
 [![Quality Score](https://img.shields.io/scrutinizer/g/flipbox/transform.svg?style=flat-square)](https://scrutinizer-ci.com/g/flipbox/transform)
-[![Total Downloads](https://img.shields.io/packagist/dt/flipboxdigital/transform.svg?style=flat-square)](https://packagist.org/packages/league/transform)
+[![Total Downloads](https://img.shields.io/packagist/dt/flipboxdigital/transform.svg?style=flat-square)](https://packagist.org/packages/flipboxdigital/transform)
 
 This package provides simple way to transform data.
 
