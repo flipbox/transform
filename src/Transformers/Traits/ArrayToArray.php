@@ -35,7 +35,7 @@ trait ArrayToArray
     {
         return $this->normalizeData(
             $this->transform($data, $scope, $identifier),
-                $scope
+            $scope
         );
     }
 }
