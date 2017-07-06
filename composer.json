@@ -1,7 +1,7 @@
 {
   "name": "flipboxdigital/transform",
-  "description": "Transform complex data structures into simple arrays",
-  "version": "1.0.0",
+  "description": "Transform data structures",
+  "version": "1.0.1",
   "keywords": [
     "transform",
     "flipbox",
