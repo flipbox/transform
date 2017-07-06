@@ -18,7 +18,7 @@ use Flipbox\Transform\Scope;
  */
 trait ObjectToArray
 {
-    use ObjectData;
+    use ArrayData;
 
     /**
      * @param \Traversable $data
@@ -33,7 +33,9 @@ trait ObjectToArray
      */
     public function __invoke($data, Scope $scope, string $identifier = null)
     {
-        $response = $this->transform($data, $scope, $identifier);
-        return $this->normalizeData($response, $scope);
+        return $this->normalizeData(
+            $this->transform($data, $scope, $identifier),
+            $scope
+        );
     }
 }

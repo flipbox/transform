@@ -33,7 +33,9 @@ trait ArrayToArray
      */
     public function __invoke($data, Scope $scope, string $identifier = null)
     {
-        $response = $this->transform($data, $scope, $identifier);
-        return $this->normalizeData($response, $scope);
+        return $this->normalizeData(
+            $this->transform($data, $scope, $identifier),
+                $scope
+        );
     }
 }
