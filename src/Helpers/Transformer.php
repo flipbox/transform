@@ -24,7 +24,8 @@ class Transformer
      */
     public static function isTransformer($transformer): bool
     {
-        return (is_object($transformer) && ($transformer instanceof Closure)) || $transformer instanceof TransformerInterface;
+        return (is_object($transformer) && ($transformer instanceof Closure)) ||
+            $transformer instanceof TransformerInterface;
     }
 
     /**
