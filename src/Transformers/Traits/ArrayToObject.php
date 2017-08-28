@@ -9,7 +9,6 @@
 
 namespace Flipbox\Transform\Transformers\Traits;
 
-use Flipbox\Transform\Resources\ResourceInterface;
 use Flipbox\Transform\Scope;
 
 /**

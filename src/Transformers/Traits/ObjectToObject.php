@@ -9,8 +9,8 @@
 
 namespace Flipbox\Transform\Transformers\Traits;
 
-use Flipbox\Transform\Resources\ResourceInterface;
 use Flipbox\Transform\Scope;
+use Traversable;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
@@ -21,12 +21,12 @@ trait ObjectToObject
     use ObjectData;
 
     /**
-     * @param \Traversable $data
+     * @param Traversable $data
      * @param $scope
      * @param $identifier
      * @return mixed
      */
-    abstract public function transform(\Traversable $data, $scope, $identifier);
+    abstract public function transform(Traversable $data, $scope, $identifier);
 
     /**
      * @inheritdoc
