@@ -18,12 +18,21 @@ use Flipbox\Transform\Transformers\TransformerInterface;
 class Transformer
 {
     /**
+     * @param $item
+     * @return bool
+     */
+    public static function isCallable($item)
+    {
+        return (is_string($item) && function_exists($item)) || (is_object($item) && ($item instanceof \Closure));
+    }
+
+    /**
      * @param $transformer
      * @return bool
      */
     public static function isTransformer($transformer)
     {
-        return is_callable($transformer) || $transformer instanceof TransformerInterface;
+        return static::isCallable($transformer) || $transformer instanceof TransformerInterface;
     }
 
     /**
