@@ -193,7 +193,7 @@ class Scope
      */
     public function parseValue($val, $data, string $key = null)
     {
-        if (Transformer::isCallable($val)) {
+        if (Transformer::isTransformer($val)) {
             return call_user_func_array($val, [$data, $this, $key]);
         }
 

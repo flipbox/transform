@@ -10,6 +10,7 @@
 namespace Flipbox\Transform\Helpers;
 
 use Flipbox\Transform\Transformers\TransformerInterface;
+use Closure;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
@@ -18,28 +19,19 @@ use Flipbox\Transform\Transformers\TransformerInterface;
 class Transformer
 {
     /**
-     * @param $item
+     * @param $transformer
      * @return bool
      */
-    public static function isCallable($item)
+    public static function isTransformer($transformer): bool
     {
-        return (is_string($item) && function_exists($item)) || (is_object($item) && ($item instanceof \Closure));
+        return (is_object($transformer) && ($transformer instanceof Closure)) || $transformer instanceof TransformerInterface;
     }
 
     /**
      * @param $transformer
      * @return bool
      */
-    public static function isTransformer($transformer)
-    {
-        return static::isCallable($transformer) || $transformer instanceof TransformerInterface;
-    }
-
-    /**
-     * @param $transformer
-     * @return bool
-     */
-    public static function isTransformerClass($transformer)
+    public static function isTransformerClass($transformer): bool
     {
         return is_string($transformer) && is_subclass_of($transformer, TransformerInterface::class);
     }
