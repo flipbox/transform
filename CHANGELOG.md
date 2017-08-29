@@ -1,10 +1,9 @@
 # Changelog
 All Notable changes to `flipboxdigital\transform` will be documented in this file
 
-## Unreleased
+## 1.0.3 - 2017-08-29
 ### Changed
 - Transformer traits now enforce strict Scope params
-
 
 ## 1.0.2 - 2017-08-28
 ### Fixed
