@@ -1,6 +1,11 @@
 # Changelog
 All Notable changes to `flipboxdigital\transform` will be documented in this file
 
+## Unreleased
+### Changed
+- Transformer traits now enforce strict Scope params
+
+
 ## 1.0.2 - 2017-08-28
 ### Fixed
 - Issue where `Scope::parseValue` attempt to call anonymous function on a string. Ref: [#1](https://github.com/flipbox/transform/issues/1)
