@@ -21,11 +21,11 @@ trait ArrayToObject
 
     /**
      * @param array $data
-     * @param $scope
+     * @param Scope $scope
      * @param $identifier
      * @return mixed
      */
-    abstract public function transform(array $data, $scope, $identifier);
+    abstract public function transform(array $data, Scope $scope, $identifier);
 
     /**
      * @inheritdoc
