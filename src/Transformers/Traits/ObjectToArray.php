@@ -21,12 +21,12 @@ trait ObjectToArray
     use ArrayData;
 
     /**
-     * @param Traversable $data
+     * @param $data
      * @param Scope $scope
      * @param $identifier
      * @return mixed
      */
-    abstract public function transform(Traversable $data, Scope $scope, $identifier);
+    abstract public function transform($data, Scope $scope, $identifier);
 
     /**
      * @inheritdoc
