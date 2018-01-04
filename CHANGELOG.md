@@ -1,6 +1,10 @@
 # Changelog
 All Notable changes to `flipboxdigital\transform` will be documented in this file
 
+## 1.1.0 - 2018-01-03
+### Changed
+- Introducing Mapper trait and helper for assisting in switching transformed array keys
+
 ## 1.0.3 - 2017-08-29
 ### Changed
 - Transformer traits now enforce strict Scope params
