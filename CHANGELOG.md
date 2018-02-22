@@ -1,7 +1,10 @@
 # Changelog
 All Notable changes to `flipboxdigital\transform` will be documented in this file
 
-## Unreleased
+## 2.0.0 - 2018-02-22
+### Added
+- Compatibility with PHP 7.2
+
 ### Changed
 - Helper classes are not appended with 'Helper'.
 
