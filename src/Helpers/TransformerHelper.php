@@ -16,7 +16,7 @@ use Closure;
  * @author Flipbox Factory <hello@flipboxfactory.com>
  * @since 1.0.0
  */
-class Transformer
+class TransformerHelper
 {
     /**
      * @param $transformer
@@ -35,5 +35,22 @@ class Transformer
     public static function isTransformerClass($transformer): bool
     {
         return is_string($transformer) && is_subclass_of($transformer, TransformerInterface::class);
+    }
+
+    /**
+     * @param $transformer
+     * @return null|callable|TransformerInterface
+     */
+    public static function resolve($transformer)
+    {
+        if (static::isTransformer($transformer)) {
+            return $transformer;
+        }
+
+        if (static::isTransformerClass($transformer)) {
+            return new $transformer();
+        }
+
+        return null;
     }
 }

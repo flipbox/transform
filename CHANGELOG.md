@@ -1,6 +1,10 @@
 # Changelog
 All Notable changes to `flipboxdigital\transform` will be documented in this file
 
+## Unreleased
+### Changed
+- Helper classes are not appended with 'Helper'.
+
 ## 1.1.0 - 2018-01-03
 ### Changed
 - Introducing Mapper trait and helper for assisting in switching transformed array keys

@@ -9,7 +9,7 @@
 
 namespace Flipbox\Transform\Resources;
 
-use Flipbox\Transform\Helpers\Object as ObjectHelper;
+use Flipbox\Transform\Helpers\ObjectHelper;
 use Flipbox\Transform\ParamBag;
 use Flipbox\Transform\Scope;
 

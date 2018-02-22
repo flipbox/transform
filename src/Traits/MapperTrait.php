@@ -9,7 +9,7 @@
 
 namespace Flipbox\Transform\Traits;
 
-use Flipbox\Transform\Helpers\Mapper;
+use Flipbox\Transform\Helpers\MapperHelper;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
@@ -84,7 +84,7 @@ trait MapperTrait
      */
     public function mapTo(array $array): array
     {
-        return Mapper::to($array, $this->getMap($array));
+        return MapperHelper::to($array, $this->getMap($array));
     }
 
     /**
@@ -93,6 +93,6 @@ trait MapperTrait
      */
     public function mapFrom(array $array): array
     {
-        return Mapper::from($array, $this->getMap($array));
+        return MapperHelper::from($array, $this->getMap($array));
     }
 }

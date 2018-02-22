@@ -9,7 +9,7 @@
 
 namespace Flipbox\Transform\Tests\Helpers;
 
-use Flipbox\Transform\Helpers\Transformer;
+use Flipbox\Transform\Helpers\TransformerHelper;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
@@ -20,7 +20,7 @@ class TransformerTest extends \PHPUnit_Framework_TestCase
     /** @test */
     public function createResolverTest()
     {
-        $this->assertEquals(false, Transformer::isTransformer('foo'));
-        $this->assertEquals(true, Transformer::isTransformer(function() {}));
+        $this->assertEquals(false, TransformerHelper::isTransformer('foo'));
+        $this->assertEquals(true, TransformerHelper::isTransformer(function() {}));
     }
 }

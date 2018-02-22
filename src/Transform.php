@@ -11,7 +11,7 @@ namespace Flipbox\Transform;
 
 use Flipbox\Transform\Resources\Collection;
 use Flipbox\Transform\Resources\Item;
-use Flipbox\Transform\Helpers\Object as ObjectHelper;
+use Flipbox\Transform\Helpers\ObjectHelper;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>

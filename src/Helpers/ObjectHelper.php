@@ -13,7 +13,7 @@ namespace Flipbox\Transform\Helpers;
  * @author Flipbox Factory <hello@flipboxfactory.com>
  * @since 1.0.0
  */
-class Object
+class ObjectHelper
 {
     /**
      * @param $object

@@ -13,7 +13,7 @@ namespace Flipbox\Transform\Helpers;
  * @author Flipbox Factory <hello@flipboxfactory.com>
  * @since 1.1.0
  */
-class Mapper
+class MapperHelper
 {
     /**
      * @param array $array

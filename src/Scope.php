@@ -9,7 +9,7 @@
 
 namespace Flipbox\Transform;
 
-use Flipbox\Transform\Helpers\Transformer;
+use Flipbox\Transform\Helpers\TransformerHelper;
 use Flipbox\Transform\Transformers\TransformerInterface;
 
 /**
@@ -193,7 +193,7 @@ class Scope
      */
     public function parseValue($val, $data, string $key = null)
     {
-        if (Transformer::isTransformer($val)) {
+        if (TransformerHelper::isTransformer($val)) {
             return call_user_func_array($val, [$data, $this, $key]);
         }
 

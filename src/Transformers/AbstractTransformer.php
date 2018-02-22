@@ -9,7 +9,7 @@
 
 namespace Flipbox\Transform\Transformers;
 
-use Flipbox\Transform\Helpers\Object as ObjectHelper;
+use Flipbox\Transform\Helpers\ObjectHelper;
 use Flipbox\Transform\Scope;
 use Flipbox\Transform\Transformers\Traits\ArrayToObject;
 
