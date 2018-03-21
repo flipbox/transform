@@ -219,7 +219,7 @@ class Scope
      */
     private function validParams($transformer, $params): array
     {
-        if(!is_object($transformer)) {
+        if (!is_object($transformer)) {
             return $params;
         }
 
