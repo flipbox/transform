@@ -21,22 +21,24 @@ class Factory
      * @param callable|TransformerInterface $transformer
      * @param $data
      * @param array $config
+     * @param array $extra
      * @return array|null
      */
-    public static function collection(callable $transformer, $data, array $config = [])
+    public static function collection(callable $transformer, $data, array $config = [], array $extra = [])
     {
-        return self::transform($config)->collection($transformer, $data);
+        return self::transform($config)->collection($transformer, $data, $extra);
     }
 
     /**
      * @param callable|TransformerInterface $transformer
      * @param $data
      * @param array $config
+     * @param array $extra
      * @return array|null
      */
-    public static function item(callable $transformer, $data, array $config = [])
+    public static function item(callable $transformer, $data, array $config = [], array $extra = [])
     {
-        return self::transform($config)->item($transformer, $data);
+        return self::transform($config)->item($transformer, $data, $extra);
     }
 
     /**

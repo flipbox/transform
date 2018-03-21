@@ -266,25 +266,27 @@ class Transform
     /**
      * @param callable $transformer
      * @param $data
+     * @param array $extra
      * @return mixed
      */
-    public function item(callable $transformer, $data)
+    public function item(callable $transformer, $data, array $extra = [])
     {
         return (new Item(
             new Scope($this)
-        ))->transform($transformer, $data);
+        ))->transform($transformer, $data, $extra);
     }
 
     /**
      * @param callable $transformer
      * @param $data
+     * @param array $extra
      * @return mixed
      */
-    public function collection(callable $transformer, $data)
+    public function collection(callable $transformer, $data, array $extra = [])
     {
         return (new Collection(
             new Scope($this)
-        ))->transform($transformer, $data);
+        ))->transform($transformer, $data, $extra);
     }
 
 

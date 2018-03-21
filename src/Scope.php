@@ -11,6 +11,7 @@ namespace Flipbox\Transform;
 
 use Flipbox\Transform\Helpers\TransformerHelper;
 use Flipbox\Transform\Transformers\TransformerInterface;
+use Psr\Log\InvalidArgumentException;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
@@ -155,11 +156,12 @@ class Scope
     /**
      * @param TransformerInterface|callable $transformer
      * @param mixed $data
+     * @param array $extra
      * @return mixed
      */
-    public function transform(callable $transformer, $data)
+    public function transform(callable $transformer, $data, array $extra = [])
     {
-        return $this->parseValue($transformer, $data);
+        return $this->parseValue($transformer, $data, null, $extra);
     }
 
     /**
@@ -189,15 +191,76 @@ class Scope
      * @param $val
      * @param $data
      * @param string|null $key
+     * @param array $extra
      * @return mixed
      */
-    public function parseValue($val, $data, string $key = null)
+    public function parseValue($val, $data, string $key = null, array $extra = [])
     {
         if (TransformerHelper::isTransformer($val)) {
-            return call_user_func_array($val, [$data, $this, $key]);
+            $args = [$data, $this, $key];
+
+            if (!empty($extra)) {
+                $args = array_merge(
+                    $args,
+                    $this->validParams($val, $extra)
+                );
+            }
+
+            return call_user_func_array($val, $args);
         }
 
         return $val;
+    }
+
+    /**
+     * @param $transformer
+     * @param $params
+     * @return array
+     */
+    private function validParams($transformer, $params): array
+    {
+        if(!is_object($transformer)) {
+            return $params;
+        }
+
+        $method = new \ReflectionMethod($transformer, '__invoke');
+
+        $ignore = ['data', 'scope', 'identifier'];
+        $args = [];
+        $missing = [];
+        $actionParams = [];
+        foreach ($method->getParameters() as $param) {
+            $name = $param->getName();
+            if (true === in_array($name, $ignore, true)) {
+                continue;
+            }
+            if (array_key_exists($name, $params)) {
+                if ($param->isArray()) {
+                    $args[] = $actionParams[$name] = (array) $params[$name];
+                } elseif (!is_array($params[$name])) {
+                    $args[] = $actionParams[$name] = $params[$name];
+                } else {
+                    throw new InvalidArgumentException(sprintf(
+                        'Invalid data received for parameter "%s".',
+                        $name
+                    ));
+                }
+                unset($params[$name]);
+            } elseif ($param->isDefaultValueAvailable()) {
+                $args[] = $actionParams[$name] = $param->getDefaultValue();
+            } else {
+                $missing[] = $name;
+            }
+        }
+
+        if (!empty($missing)) {
+            throw new InvalidArgumentException(sprintf(
+                'Missing required parameters "%s".',
+                implode(', ', $missing)
+            ));
+        }
+
+        return $args;
     }
 
     /**

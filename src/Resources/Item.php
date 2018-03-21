@@ -18,13 +18,15 @@ class Item extends AbstractResource
     /**
      * @param callable $transformer
      * @param $data
+     * @param array $extra
      * @return array|null
      */
-    public function transform(callable $transformer, $data)
+    public function transform(callable $transformer, $data, array $extra = [])
     {
         return $this->scope->transform(
             $transformer,
-            $data
+            $data,
+            $extra
         );
     }
 }

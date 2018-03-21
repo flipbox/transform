@@ -22,16 +22,18 @@ class Collection extends Item
     /**
      * @param callable $transformer
      * @param $data
+     * @param array $extra
      * @return array|null
      */
-    public function transform(callable $transformer, $data)
+    public function transform(callable $transformer, $data, array $extra = [])
     {
         $items = [];
 
         foreach ($data as $item) {
             $items[] = parent::transform(
                 $transformer,
-                $item
+                $item,
+                $extra
             );
         }
 
