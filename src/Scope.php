@@ -11,7 +11,7 @@ namespace Flipbox\Transform;
 
 use Flipbox\Transform\Helpers\TransformerHelper;
 use Flipbox\Transform\Transformers\TransformerInterface;
-use Psr\Log\InvalidArgumentException;
+use InvalidArgumentException;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
@@ -230,7 +230,7 @@ class Scope
         $missing = [];
         $actionParams = [];
         foreach ($method->getParameters() as $param) {
-            $name = $param->getName();
+            $name = $param->name;
             if (true === in_array($name, $ignore, true)) {
                 continue;
             }
@@ -333,7 +333,7 @@ class Scope
      */
     private function scopeString(string $checkScopeSegment): string
     {
-        if ($this->parentScopes) {
+        if (!empty($this->parentScopes)) {
             $scopeArray = array_slice($this->parentScopes, 1);
             array_push($scopeArray, $this->scopeIdentifier, $checkScopeSegment);
         } else {
