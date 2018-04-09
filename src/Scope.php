@@ -214,10 +214,10 @@ class Scope
 
     /**
      * @param $transformer
-     * @param $params
+     * @param array $params
      * @return array
      */
-    private function validParams($transformer, $params): array
+    private function validParams($transformer, array $params): array
     {
         if (!is_object($transformer)) {
             return $params;
