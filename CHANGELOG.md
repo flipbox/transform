@@ -1,6 +1,10 @@
 # Changelog
 All Notable changes to `flipboxdigital\transform` will be documented in this file
 
+## 2.1.0 - 2018-04-10
+### Added
+- Allowing ‘extra’ attributes to be passed when transforming
+
 ## 2.0.0 - 2018-02-22
 ### Added
 - Compatibility with PHP 7.2
