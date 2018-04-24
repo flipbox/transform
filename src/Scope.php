@@ -235,15 +235,19 @@ class Scope
                 continue;
             }
             if (array_key_exists($name, $params)) {
-                if ($param->isArray()) {
-                    $args[] = $actionParams[$name] = (array) $params[$name];
-                } elseif (!is_array($params[$name])) {
-                    $args[] = $actionParams[$name] = $params[$name];
+                if ($param->hasType()) {
+                    if ($param->isArray()) {
+                        $args[] = $actionParams[$name] = (array) $params[$name];
+                    } elseif (!is_array($params[$name])) {
+                        $args[] = $actionParams[$name] = $params[$name];
+                    } else {
+                        throw new InvalidArgumentException(sprintf(
+                            'Invalid data received for parameter "%s".',
+                            $name
+                        ));
+                    }
                 } else {
-                    throw new InvalidArgumentException(sprintf(
-                        'Invalid data received for parameter "%s".',
-                        $name
-                    ));
+                    $args[] = $actionParams[$name] = $params[$name];
                 }
                 unset($params[$name]);
             } elseif ($param->isDefaultValueAvailable()) {
