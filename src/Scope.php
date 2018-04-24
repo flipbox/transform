@@ -231,7 +231,17 @@ class Scope
 
         $args = $missing = [];
         foreach ($method->getParameters() as $param) {
-            $this->validParam($param, $params, $args, $missing);
+            $name = $param->name;
+            if (true === in_array($name, self::IGNORE_EXTRA_PARAMS, true)) {
+                continue;
+            }
+            if (array_key_exists($name, $params)) {
+                $args[] = $this->argType($param, $params[$name]);
+            } elseif ($param->isDefaultValueAvailable()) {
+                $args[] = $param->getDefaultValue();
+            } else {
+                $missing[] = $name;
+            }
         }
 
         if (!empty($missing)) {
@@ -242,31 +252,6 @@ class Scope
         }
 
         return $args;
-    }
-
-    /**
-     * @param ReflectionParameter $param
-     * @param array $params
-     * @param array $args
-     * @param array $missing
-     */
-    private function validParam(
-        ReflectionParameter $param,
-        array $params,
-        array &$args,
-        array &$missing
-    ) {
-        $name = $param->name;
-        if (true === in_array($name, self::IGNORE_EXTRA_PARAMS, true)) {
-            return;
-        }
-        if (array_key_exists($name, $params)) {
-            $args[] = $this->argType($param, $params[$name]);
-        } elseif ($param->isDefaultValueAvailable()) {
-            $args[] = $param->getDefaultValue();
-        } else {
-            $missing[] = $name;
-        }
     }
 
     /**
