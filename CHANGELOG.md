@@ -1,6 +1,10 @@
 # Changelog
 All Notable changes to `flipboxdigital\transform` will be documented in this file
 
+## Unreleased
+### Added
+- ‘extra’ attribute types that are an array are only verified if a type is specified
+
 ## 2.1.0 - 2018-04-10
 ### Added
 - Allowing ‘extra’ attributes to be passed when transforming
