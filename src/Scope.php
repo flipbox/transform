@@ -12,6 +12,8 @@ namespace Flipbox\Transform;
 use Flipbox\Transform\Helpers\TransformerHelper;
 use Flipbox\Transform\Transformers\TransformerInterface;
 use InvalidArgumentException;
+use ReflectionMethod;
+use ReflectionParameter;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
@@ -19,6 +21,8 @@ use InvalidArgumentException;
  */
 class Scope
 {
+    const IGNORE_EXTRA_PARAMS = ['data', 'scope', 'identifier'];
+
     /**
      * @var string
      */
@@ -223,38 +227,11 @@ class Scope
             return $params;
         }
 
-        $method = new \ReflectionMethod($transformer, '__invoke');
+        $method = new ReflectionMethod($transformer, '__invoke');
 
-        $ignore = ['data', 'scope', 'identifier'];
-        $args = [];
-        $missing = [];
-        $actionParams = [];
+        $args = $missing = [];
         foreach ($method->getParameters() as $param) {
-            $name = $param->name;
-            if (true === in_array($name, $ignore, true)) {
-                continue;
-            }
-            if (array_key_exists($name, $params)) {
-                if ($param->hasType()) {
-                    if ($param->isArray()) {
-                        $args[] = $actionParams[$name] = (array) $params[$name];
-                    } elseif (!is_array($params[$name])) {
-                        $args[] = $actionParams[$name] = $params[$name];
-                    } else {
-                        throw new InvalidArgumentException(sprintf(
-                            'Invalid data received for parameter "%s".',
-                            $name
-                        ));
-                    }
-                } else {
-                    $args[] = $actionParams[$name] = $params[$name];
-                }
-                unset($params[$name]);
-            } elseif ($param->isDefaultValueAvailable()) {
-                $args[] = $actionParams[$name] = $param->getDefaultValue();
-            } else {
-                $missing[] = $name;
-            }
+            $this->validParam($param, $params, $args, $missing);
         }
 
         if (!empty($missing)) {
@@ -265,6 +242,62 @@ class Scope
         }
 
         return $args;
+    }
+
+    /**
+     * @param ReflectionParameter $param
+     * @param array $params
+     * @param array $args
+     * @param array $missing
+     */
+    private function validParam(
+        ReflectionParameter $param,
+        array $params,
+        array &$args,
+        array &$missing
+    ) {
+        $name = $param->name;
+        if (true === in_array($name, self::IGNORE_EXTRA_PARAMS, true)) {
+            return;
+        }
+        if (array_key_exists($name, $params)) {
+            $args[] = $this->argType($param, $params[$name]);
+        } elseif ($param->isDefaultValueAvailable()) {
+            $args[] = $param->getDefaultValue();
+        } else {
+            $missing[] = $name;
+        }
+    }
+
+    /**
+     * @param ReflectionParameter $param
+     * @param $value
+     * @return mixed
+     */
+    private function argType(
+        ReflectionParameter $param,
+        $value
+    ) {
+        if (!$param->hasType()) {
+            return $value;
+        }
+
+        if ($param->isArray()) {
+            return (array)$value;
+        }
+
+        if ($param->isCallable() && is_callable($value)) {
+            return $value;
+        }
+
+        if (!is_array($value)) {
+            return $value;
+        }
+
+        throw new InvalidArgumentException(sprintf(
+            'Invalid data received for parameter "%s".',
+            $param->name
+        ));
     }
 
     /**
