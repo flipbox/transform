@@ -26,7 +26,7 @@ interface TransformerInterface
      * @param $data
      * @param Scope $scope
      * @param string $identifier
-     * @return array|string|null
+     * @return mixed
      */
     public function __invoke($data, Scope $scope, string $identifier = null);
 }
