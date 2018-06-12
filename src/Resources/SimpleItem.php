@@ -57,6 +57,4 @@ class SimpleItem implements ResourceInterface
 
         return call_user_func_array($transformer, $args);
     }
-
-
 }

@@ -71,7 +71,6 @@ class TransformerHelper
     public static function normalizeIncludes(array $includes): array
     {
         foreach ($includes as $k => $v) {
-
             if (is_string($v) && ($pos = strrpos($v, '.')) !== false) {
                 $v = [substr($v, 0, $pos) => [substr($v, $pos + 1)]];
             }
