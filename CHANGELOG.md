@@ -1,7 +1,7 @@
 # Changelog
 All Notable changes to `flipboxdigital\transform` will be documented in this file
 
-## Unreleased
+## 2.2.0 - 2018-06-11
 ### Added
 - `Scope::parseNestedValue` should be used when parsing nested values as it will handle includes, excludes gracefully 
 - The concept of simple item and collection transformers which do not support advanced scope-related features
