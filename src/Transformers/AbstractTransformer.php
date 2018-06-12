@@ -10,6 +10,7 @@
 namespace Flipbox\Transform\Transformers;
 
 use Flipbox\Transform\Helpers\ObjectHelper;
+use Flipbox\Transform\Helpers\TransformerHelper;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
@@ -17,6 +18,13 @@ use Flipbox\Transform\Helpers\ObjectHelper;
  */
 abstract class AbstractTransformer implements TransformerInterface
 {
+    /**
+     * The normalized includes
+     *
+     * @var null|array
+     */
+    private $includes;
+
     /**
      * @param array $config
      */
@@ -28,9 +36,24 @@ abstract class AbstractTransformer implements TransformerInterface
     /**
      * @return array
      */
-    public function getIncludes(): array
+    protected function defineIncludes(): array
     {
         return [];
+    }
+
+    /**
+     * Returns an array of normalized includes.  It is recommend
+     * @return array
+     */
+    public function getIncludes(): array
+    {
+        if ($this->includes === null) {
+            $this->includes = TransformerHelper::normalizeIncludes(
+                $this->defineIncludes()
+            );
+        }
+
+        return $this->includes;
     }
 
     /**

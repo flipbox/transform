@@ -56,28 +56,19 @@ class TransformerHelper
 
     /**
      * @param TransformerInterface $transformer
-     * @return array
-     */
-    public static function normalizeIncludes(TransformerInterface $transformer): array
-    {
-        return self::normalizeIncludesInternal($transformer->getIncludes());
-    }
-
-    /**
-     * @param TransformerInterface $transformer
      * @param string $key
      * @return bool
      */
     public static function inInclude(TransformerInterface $transformer, string $key): bool
     {
-        return self::findInArray(static::normalizeIncludes($transformer), $key) !== null;
+        return self::findInArray($transformer->getIncludes(), $key) !== null;
     }
 
     /**
      * @param array $includes
      * @return array
      */
-    private static function normalizeIncludesInternal(array $includes)
+    public static function normalizeIncludes(array $includes): array
     {
         foreach ($includes as $k => $v) {
 
@@ -86,7 +77,7 @@ class TransformerHelper
             }
 
             // normalize sub-includes
-            $v = is_array($v) ? static::normalizeIncludesInternal($v) : $v;
+            $v = is_array($v) ? static::normalizeIncludes($v) : $v;
 
             if (is_numeric($k)) {
                 unset($includes[$k]);
