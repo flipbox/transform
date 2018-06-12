@@ -9,6 +9,8 @@
 
 namespace Flipbox\Transform;
 
+use Flipbox\Transform\Resources\SimpleCollection;
+use Flipbox\Transform\Resources\SimpleItem;
 use Flipbox\Transform\Transformers\TransformerInterface;
 
 /**
@@ -17,6 +19,28 @@ use Flipbox\Transform\Transformers\TransformerInterface;
  */
 class Factory
 {
+    /**
+     * @param callable|TransformerInterface $transformer
+     * @param $data
+     * @param array $extra
+     * @return array|null
+     */
+    public static function simpleCollection(callable $transformer, $data, array $extra = [])
+    {
+        return call_user_func_array(new SimpleCollection(), [$data, $transformer, $extra]);
+    }
+
+    /**
+     * @param callable|TransformerInterface $transformer
+     * @param $data
+     * @param array $extra
+     * @return array|null
+     */
+    public static function simpleItem(callable $transformer, $data, array $extra = [])
+    {
+        return call_user_func_array(new SimpleItem(), [$data, $transformer, $extra]);
+    }
+
     /**
      * @param callable|TransformerInterface $transformer
      * @param $data
