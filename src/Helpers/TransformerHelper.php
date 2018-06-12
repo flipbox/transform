@@ -112,7 +112,7 @@ class TransformerHelper
     private static function findInArray(array $array, string $key, $default = null)
     {
         if (($pos = strrpos($key, '.')) !== false) {
-            $array = static::findInArray($array, substr($key, 0, $pos), $default);
+            $array = self::findInArray($array, substr($key, 0, $pos), $default);
             $key = substr($key, $pos + 1);
         }
 
