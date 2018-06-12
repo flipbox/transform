@@ -115,6 +115,6 @@ class TransformerHelper
             $key = substr($key, $pos + 1);
         }
 
-        return array_key_exists($key, $array) ? $array[$key] : $default;
+        return is_array($array) && array_key_exists($key, $array) ? $array[$key] : $default;
     }
 }
