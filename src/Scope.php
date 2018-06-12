@@ -10,6 +10,7 @@
 namespace Flipbox\Transform;
 
 use Flipbox\Transform\Helpers\TransformerHelper;
+use Flipbox\Transform\Traits\ExtraParameterTrait;
 use Flipbox\Transform\Transformers\TransformerInterface;
 use InvalidArgumentException;
 use ReflectionMethod;
@@ -21,7 +22,7 @@ use ReflectionParameter;
  */
 class Scope
 {
-    const IGNORE_EXTRA_PARAMS = ['data', 'scope', 'identifier'];
+    use ExtraParameterTrait;
 
     /**
      * @var string
@@ -165,7 +166,7 @@ class Scope
      */
     public function transform(callable $transformer, $data, array $extra = [])
     {
-        return $this->parseValue($transformer, $data, null, $extra);
+        return $this->parseTransformer($transformer, $data, null, $extra);
     }
 
     /**
@@ -177,7 +178,7 @@ class Scope
     {
         // Ignore optional (that have not been explicitly requested)
         if ($transformer instanceof TransformerInterface &&
-            in_array($key, $transformer->getIncludes(), true) &&
+            TransformerHelper::inInclude($transformer, $key) &&
             !$this->isRequested($key)
         ) {
             return false;
@@ -195,94 +196,71 @@ class Scope
      * @param $val
      * @param $data
      * @param string|null $key
-     * @param array $extra
      * @return mixed
+     *
+     * @deprecated It is recommended one uses static::parseNestedValue
      */
-    public function parseValue($val, $data, string $key = null, array $extra = [])
+    public function parseValue($val, $data, string $key = null)
     {
         if (TransformerHelper::isTransformer($val)) {
-            $args = [$data, $this, $key];
-
-            if (!empty($extra)) {
-                $args = array_merge(
-                    $args,
-                    $this->validParams($val, $extra)
-                );
-            }
-
-            return call_user_func_array($val, $args);
+            return $this->parseTransformer($val, $data, $key);
         }
 
         return $val;
     }
 
     /**
-     * @param $transformer
-     * @param array $params
-     * @return array
+     * @param callable $transformer
+     * @param $val
+     * @param $data
+     * @param string|null $key
+     * @return mixed
      */
-    private function validParams($transformer, array $params): array
+    public function parseNestedValue(callable $transformer, $val, $data, string $key = null)
     {
-        if (!is_object($transformer)) {
-            return $params;
+        if (TransformerHelper::isTransformer($val)) {
+            return $this->parseTransformer($val, $data, $key);
         }
 
-        $method = new ReflectionMethod($transformer, '__invoke');
+        if (is_array($val)) {
+            foreach ($val as $k => $v) {
+                $newKey = $key . '.' . $k;
 
-        $args = $missing = [];
-        foreach ($method->getParameters() as $param) {
-            $name = $param->name;
-            if (true === in_array($name, self::IGNORE_EXTRA_PARAMS, true)) {
-                continue;
-            }
-            if (array_key_exists($name, $params)) {
-                $args[] = $this->argType($param, $params[$name]);
-            } elseif ($param->isDefaultValueAvailable()) {
-                $args[] = $param->getDefaultValue();
-            } else {
-                $missing[] = $name;
+                if (!$this->includeValue($transformer, $newKey)) {
+                    unset($val[$k]);
+                    continue;
+                }
+
+                $val[$k] = $this->parseNestedValue($transformer, $v, $val, $newKey);
             }
         }
 
-        if (!empty($missing)) {
-            throw new InvalidArgumentException(sprintf(
-                'Missing required parameters "%s".',
-                implode(', ', $missing)
-            ));
-        }
-
-        return $args;
+        return $val;
     }
 
     /**
-     * @param ReflectionParameter $param
-     * @param $value
+     * @param callable $transformer
+     * @param $data
+     * @param string|null $key
+     * @param array $extra
      * @return mixed
      */
-    private function argType(
-        ReflectionParameter $param,
-        $value
-    ) {
-        if (!$param->hasType()) {
-            return $value;
+    public function parseTransformer(callable $transformer, $data, string $key = null, array $extra = [])
+    {
+        $args = [$data, $this, $key];
+
+        if (!empty($extra)) {
+            try {
+                $args = array_merge(
+                    $args,
+                    $this->validParams($transformer, $extra)
+                );
+            } catch (\ReflectionException $e) {
+                // Sorry
+            }
         }
 
-        if ($param->isArray()) {
-            return (array)$value;
-        }
-
-        if ($param->isCallable() && is_callable($value)) {
-            return $value;
-        }
-
-        if (!is_array($value)) {
-            return $value;
-        }
-
-        throw new InvalidArgumentException(sprintf(
-            'Invalid data received for parameter "%s".',
-            $param->name
-        ));
+        return call_user_func_array($transformer, $args);
     }
 
     /**

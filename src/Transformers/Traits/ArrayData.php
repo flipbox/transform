@@ -39,7 +39,7 @@ trait ArrayData
             if (!$scope->includeValue($this, $key)) {
                 continue;
             }
-            $includedData[$key] = $scope->parseValue($val, $data, $key);
+            $includedData[$key] = $scope->parseNestedValue($this, $val, $data, $key);
         }
 
         // Return only the requested fields

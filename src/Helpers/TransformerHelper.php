@@ -9,8 +9,8 @@
 
 namespace Flipbox\Transform\Helpers;
 
-use Flipbox\Transform\Transformers\TransformerInterface;
 use Closure;
+use Flipbox\Transform\Transformers\TransformerInterface;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
@@ -52,5 +52,79 @@ class TransformerHelper
         }
 
         return null;
+    }
+
+    /**
+     * @param TransformerInterface $transformer
+     * @return array
+     */
+    public static function normalizeIncludes(TransformerInterface $transformer): array
+    {
+        return self::normalizeIncludesInternal($transformer->getIncludes());
+    }
+
+    /**
+     * @param TransformerInterface $transformer
+     * @param string $key
+     * @return bool
+     */
+    public static function inInclude(TransformerInterface $transformer, string $key): bool
+    {
+        return self::findInArray(static::normalizeIncludes($transformer), $key) !== null;
+    }
+
+    /**
+     * @param array $includes
+     * @return array
+     */
+    private static function normalizeIncludesInternal(array $includes)
+    {
+        foreach ($includes as $k => $v) {
+
+            if (is_string($v) && ($pos = strrpos($v, '.')) !== false) {
+                $v = [substr($v, 0, $pos) => [substr($v, $pos + 1)]];
+            }
+
+            // normalize sub-includes
+            $v = is_array($v) ? static::normalizeIncludesInternal($v) : $v;
+
+            if (is_numeric($k)) {
+                unset($includes[$k]);
+
+                if (is_array($v)) {
+                    $k = key($v);
+                    $v = reset($v);
+                } else {
+                    $k = $v;
+                }
+            }
+
+            $includes[$k] = $v;
+
+            if (($pos = strrpos($k, '.')) !== false) {
+                $includes[substr($k, 0, $pos)] = [substr($k, $pos + 1) => $includes[$k]];
+                unset($includes[$k]);
+            }
+        }
+
+        return $includes;
+    }
+
+    /**
+     * Retrieves the value of an array element or object property with the given key or property name.
+     *
+     * @param $array
+     * @param $key
+     * @param null $default
+     * @return mixed|null
+     */
+    private static function findInArray(array $array, string $key, $default = null)
+    {
+        if (($pos = strrpos($key, '.')) !== false) {
+            $array = static::findInArray($array, substr($key, 0, $pos), $default);
+            $key = substr($key, $pos + 1);
+        }
+
+        return array_key_exists($key, $array) ? $array[$key] : $default;
     }
 }

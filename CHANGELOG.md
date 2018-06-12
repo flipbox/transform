@@ -1,6 +1,10 @@
 # Changelog
 All Notable changes to `flipboxdigital\transform` will be documented in this file
 
+## Unreleased
+### Added
+- `Scope::parseNestedValue` should be used when parsing nested values as it will handle includes, excludes gracefully 
+
 ## 2.1.1 - 2018-04-24
 ### Added
 - ‘extra’ attribute types that are an array are only verified if a type is specified

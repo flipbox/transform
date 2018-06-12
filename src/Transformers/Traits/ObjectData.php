@@ -30,7 +30,7 @@ trait ObjectData
                 $data->$key = null;
                 continue;
             }
-            $data->$key = $scope->parseValue($val, $data, $key);
+            $data->$key = $scope->parseNestedValue($this, $val, $data, $key);
         }
 
         return $data;

@@ -10,8 +10,6 @@
 namespace Flipbox\Transform\Transformers;
 
 use Flipbox\Transform\Helpers\ObjectHelper;
-use Flipbox\Transform\Scope;
-use Flipbox\Transform\Transformers\Traits\ArrayToObject;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
