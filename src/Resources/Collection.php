@@ -9,31 +9,28 @@
 
 namespace Flipbox\Transform\Resources;
 
-use ArrayIterator;
+use Flipbox\Transform\Scope;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
- * @since 1.0.0
- *
- * @property array|ArrayIterator $data
+ * @since 3.0.0
  */
-class Collection extends Item
+class Collection extends AbstractResource
 {
     /**
-     * @param callable $transformer
-     * @param $data
-     * @param array $extra
-     * @return array|null
+     * @inheritdoc
      */
-    public function transform(callable $transformer, $data, array $extra = [])
+    public function __invoke(Scope $scope, string $identifier = null, ...$params): array
     {
+        $childScope = $scope->childScope($identifier);
+
         $items = [];
 
-        foreach ($data as $item) {
-            $items[] = parent::transform(
-                $transformer,
-                $item,
-                $extra
+        foreach ($this->data as $data) {
+            $items[] = $childScope->transform(
+                $this->transformer,
+                $data,
+                $params
             );
         }
 

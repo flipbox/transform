@@ -9,25 +9,18 @@
 
 namespace Flipbox\Transform\Resources;
 
-use Flipbox\Transform\Transformers\TransformerInterface;
+use Flipbox\Transform\Scope;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
- * @since 1.0.0
+ * @since 3.0.0
  */
 interface ResourceInterface
 {
     /**
-     * @param callable|TransformerInterface $transformer
-     * @param $data
+     * @param Scope $scope
+     * @param string|null $identifier
      * @return mixed
      */
-    public function transform(callable $transformer, $data);
-
-    /**
-     * @param callable|TransformerInterface $transformer
-     * @param $data
-     * @return mixed
-     */
-    public function __invoke($data, callable $transformer);
+    public function __invoke(Scope $scope, string $identifier = null);
 }

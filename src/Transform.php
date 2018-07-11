@@ -9,13 +9,11 @@
 
 namespace Flipbox\Transform;
 
-use Flipbox\Transform\Resources\Collection;
-use Flipbox\Transform\Resources\Item;
 use Flipbox\Transform\Helpers\ObjectHelper;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
- * @since 1.0.0
+ * @since 3.0.0
  */
 class Transform
 {
@@ -269,11 +267,15 @@ class Transform
      * @param array $extra
      * @return mixed
      */
-    public function item(callable $transformer, $data, array $extra = [])
+    public function item(callable $transformer, $data, array $extra = []): array
     {
-        return (new Item(
-            new Scope($this)
-        ))->transform($transformer, $data, $extra);
+        $scope = new Scope($this);
+
+        return $scope->transform(
+            $transformer,
+            $data,
+            $extra
+        );
     }
 
     /**
@@ -282,11 +284,20 @@ class Transform
      * @param array $extra
      * @return mixed
      */
-    public function collection(callable $transformer, $data, array $extra = [])
+    public function collection(callable $transformer, array $data, array $extra = []): array
     {
-        return (new Collection(
-            new Scope($this)
-        ))->transform($transformer, $data, $extra);
+        $items = [];
+        $scope = new Scope($this);
+
+        foreach ($data as $item) {
+            $items[] = $scope->transform(
+                $transformer,
+                $item,
+                $extra
+            );
+        }
+
+        return $items;
     }
 
 

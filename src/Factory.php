@@ -9,60 +9,42 @@
 
 namespace Flipbox\Transform;
 
-use Flipbox\Transform\Resources\SimpleCollection;
-use Flipbox\Transform\Resources\SimpleItem;
-use Flipbox\Transform\Transformers\TransformerInterface;
-
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
- * @since 1.0.0
+ * @since 3.0.0
  */
 class Factory
 {
     /**
-     * @param callable|TransformerInterface $transformer
+     * @param callable $transformer
      * @param $data
      * @param array $extra
      * @return array|null
      */
-    public static function simpleCollection(callable $transformer, $data, array $extra = [])
+    public static function collection(callable $transformer, $data, array $extra = []): array
     {
-        return call_user_func_array(new SimpleCollection(), [$data, $transformer, $extra]);
+        $items = [];
+        foreach ($data as $item) {
+            $items[] = self::item($transformer, $item, $extra);
+        }
+        return $items;
     }
 
     /**
-     * @param callable|TransformerInterface $transformer
+     * @param callable $transformer
      * @param $data
      * @param array $extra
      * @return array|null
      */
-    public static function simpleItem(callable $transformer, $data, array $extra = [])
+    public static function item(callable $transformer, $data, array $extra = [])
     {
-        return call_user_func_array(new SimpleItem(), [$data, $transformer, $extra]);
-    }
-
-    /**
-     * @param callable|TransformerInterface $transformer
-     * @param $data
-     * @param array $config
-     * @param array $extra
-     * @return array|null
-     */
-    public static function collection(callable $transformer, $data, array $config = [], array $extra = [])
-    {
-        return self::transform($config)->collection($transformer, $data, $extra);
-    }
-
-    /**
-     * @param callable|TransformerInterface $transformer
-     * @param $data
-     * @param array $config
-     * @param array $extra
-     * @return array|null
-     */
-    public static function item(callable $transformer, $data, array $config = [], array $extra = [])
-    {
-        return self::transform($config)->item($transformer, $data, $extra);
+        return call_user_func_array(
+            $transformer,
+            array_merge(
+                [$data],
+                $extra
+            )
+        );
     }
 
     /**

@@ -10,21 +10,13 @@
 namespace Flipbox\Transform\Transformers;
 
 use Flipbox\Transform\Helpers\ObjectHelper;
-use Flipbox\Transform\Helpers\TransformerHelper;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
- * @since 1.0.0
+ * @since 3.0.0
  */
-abstract class AbstractTransformer implements TransformerInterface
+abstract class AbstractTransformer
 {
-    /**
-     * The normalized includes
-     *
-     * @var null|array
-     */
-    private $includes;
-
     /**
      * @param array $config
      */
@@ -34,45 +26,34 @@ abstract class AbstractTransformer implements TransformerInterface
     }
 
     /**
-     * @return array
+     * @param mixed $data
+     * @param callable $transformer
+     * @param array $extra
+     * @return mixed
      */
-    protected function defineIncludes(): array
+    protected function item($data, callable $transformer, array $extra = [])
     {
-        return [];
+        return call_user_func_array(
+            $transformer,
+            array_merge(
+                [$data],
+                $extra
+            )
+        );
     }
 
     /**
-     * Returns an array of normalized includes.  It is recommend
-     * @return array
+     * @param mixed $data
+     * @param callable $transformer
+     * @param array $extra
+     * @return mixed
      */
-    public function getIncludes(): array
+    protected function collection($data, callable $transformer, array $extra = [])
     {
-        if ($this->includes === null) {
-            $this->includes = TransformerHelper::normalizeIncludes(
-                $this->defineIncludes()
-            );
+        $items = [];
+        foreach ($data as $item) {
+            $items[] = $this->item($item, $transformer, $extra);
         }
-
-        return $this->includes;
-    }
-
-    /**
-     * @param mixed $data
-     * @param TransformerInterface|callable $transformer
-     * @return Item
-     */
-    protected function item($data, $transformer): Item
-    {
-        return new Item(['data' => $data, 'transformer' => $transformer]);
-    }
-
-    /**
-     * @param mixed $data
-     * @param TransformerInterface|callable $transformer
-     * @return Collection
-     */
-    protected function collection($data, $transformer): Collection
-    {
-        return new Collection(['data' => $data, 'transformer' => $transformer]);
+        return $items;
     }
 }

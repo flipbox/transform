@@ -13,7 +13,7 @@ use Flipbox\Transform\Helpers\MapperHelper;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
- * @since 1.1.0
+ * @since 3.0.0
  */
 trait MapperTrait
 {

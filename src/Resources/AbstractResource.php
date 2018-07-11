@@ -9,56 +9,37 @@
 
 namespace Flipbox\Transform\Resources;
 
-use Flipbox\Transform\Helpers\ObjectHelper;
-use Flipbox\Transform\ParamBag;
 use Flipbox\Transform\Scope;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
- * @since 1.0.0
+ * @since 3.0.0
  */
 abstract class AbstractResource implements ResourceInterface
 {
     /**
-     * @var Scope
+     * @var mixed
      */
-    protected $scope;
+    protected $data;
 
     /**
-     * @param callable $transformer
-     * @param $data
-     * @return null|array
+     * @var callable
      */
-    abstract public function transform(callable $transformer, $data);
+    protected $transformer;
 
     /**
-     * @param Scope $scope
-     * @param array $config
-     */
-    public function __construct(Scope $scope, array $config = [])
-    {
-        $this->scope = $scope;
-        ObjectHelper::configure($this, $config);
-    }
-
-    /**
-     * @return ParamBag
-     */
-    protected function getParams(): ParamBag
-    {
-        return $this->scope->getParams();
-    }
-
-    /**
+     * ArrayItem constructor.
      * @param $data
      * @param callable $transformer
-     * @return array|null
      */
-    public function __invoke($data, callable $transformer)
+    public function __construct($data, callable $transformer)
     {
-        return $this->transform(
-            $transformer,
-            $data
-        );
+        $this->data = $data;
+        $this->transformer = $transformer;
     }
+
+    /**
+     * @inheritdoc
+     */
+    public abstract function __invoke(Scope $scope, string $identifier = null, ...$params);
 }

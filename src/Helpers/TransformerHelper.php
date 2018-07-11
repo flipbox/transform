@@ -14,7 +14,7 @@ use Flipbox\Transform\Transformers\TransformerInterface;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
- * @since 1.0.0
+ * @since 3.0.0
  */
 class TransformerHelper
 {
@@ -22,10 +22,27 @@ class TransformerHelper
      * @param $transformer
      * @return bool
      */
+    public static function isClosure($transformer): bool
+    {
+        return $transformer instanceof Closure;
+    }
+
+    /**
+     * @param $transformer
+     * @return bool
+     */
+    public static function isCallable($transformer): bool
+    {
+        return is_object($transformer) && is_callable($transformer);
+    }
+
+    /**
+     * @param $transformer
+     * @return bool
+     */
     public static function isTransformer($transformer): bool
     {
-        return (is_object($transformer) && ($transformer instanceof Closure)) ||
-            $transformer instanceof TransformerInterface;
+        return static::isClosure($transformer) || static::isCallable($transformer);
     }
 
     /**
@@ -34,7 +51,10 @@ class TransformerHelper
      */
     public static function isTransformerClass($transformer): bool
     {
-        return is_string($transformer) && is_subclass_of($transformer, TransformerInterface::class);
+        return is_string($transformer) && (
+                is_subclass_of($transformer, TransformerInterface::class) ||
+                is_callable($transformer, '__invoke')
+            );
     }
 
     /**

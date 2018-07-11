@@ -9,24 +9,26 @@
 
 namespace Flipbox\Transform\Resources;
 
+use Flipbox\Transform\Scope;
+
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
- * @since 1.0.0
+ * @since 3.0.0
  */
 class Item extends AbstractResource
 {
     /**
-     * @param callable $transformer
-     * @param $data
-     * @param array $extra
-     * @return array|null
+     * @inheritdoc
      */
-    public function transform(callable $transformer, $data, array $extra = [])
+    public function __invoke(Scope $scope, string $identifier = null, ...$params)
     {
-        return $this->scope->transform(
-            $transformer,
-            $data,
-            $extra
+        $childScope = $scope->childScope($identifier);
+
+        return $childScope->transform(
+            $this->transformer,
+            $this->data,
+            $params
         );
+
     }
 }

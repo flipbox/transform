@@ -9,21 +9,17 @@
 
 namespace Flipbox\Transform;
 
+use Flipbox\Transform\Helpers\ArgumentHelper;
 use Flipbox\Transform\Helpers\TransformerHelper;
-use Flipbox\Transform\Traits\ExtraParameterTrait;
+use Flipbox\Transform\Resources\ResourceInterface;
 use Flipbox\Transform\Transformers\TransformerInterface;
-use InvalidArgumentException;
-use ReflectionMethod;
-use ReflectionParameter;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
- * @since 1.0.0
+ * @since 3.0.0
  */
 class Scope
 {
-    use ExtraParameterTrait;
-
     /**
      * @var string
      */
@@ -74,15 +70,6 @@ class Scope
         );
     }
 
-    /**
-     * Get the current identifier.
-     *
-     * @return string|null
-     */
-    public function getScopeIdentifier()
-    {
-        return $this->scopeIdentifier;
-    }
 
     /**
      * Get the unique identifier for this scope.
@@ -106,23 +93,11 @@ class Scope
     }
 
     /**
-     * Getter for parentScopes.
-     *
-     * @return array
-     */
-    public function getParentScopes(): array
-    {
-        return $this->parentScopes;
-    }
-
-    /**
      * Is Requested.
      *
      * Check if - in relation to the current scope - this specific segment is allowed.
      * That means, if a.b.c is requested and the current scope is a.b, then c is allowed. If the current
      * scope is a then c is not allowed, even if it is there and potentially transformable.
-     *
-     * @internal
      *
      * @param string $checkScopeSegment
      *
@@ -144,29 +119,16 @@ class Scope
      * then c will not be allowed in the transformation whether it appears in
      * the list of default or available, requested includes.
      *
-     * @internal
-     *
      * @param string $checkScopeSegment
      *
      * @return bool
      */
-    public function isExcluded($checkScopeSegment): bool
+    protected function isExcluded($checkScopeSegment): bool
     {
         return in_array(
             $this->scopeString($checkScopeSegment),
             $this->transform->getExcludes()
         );
-    }
-
-    /**
-     * @param TransformerInterface|callable $transformer
-     * @param mixed $data
-     * @param array $extra
-     * @return mixed
-     */
-    public function transform(callable $transformer, $data, array $extra = [])
-    {
-        return $this->parseTransformer($transformer, $data, null, $extra);
     }
 
     /**
@@ -193,49 +155,110 @@ class Scope
     }
 
     /**
-     * @param $val
-     * @param $data
-     * @param string|null $key
-     * @return mixed
-     *
-     * @deprecated It is recommended one uses static::parseNestedValue
+     * @param callable $transformer
+     * @param mixed $data
+     * @param array $extra
+     * @return array
      */
-    public function parseValue($val, $data, string $key = null)
+    public function transform(callable $transformer, $data, array $extra = []): array
     {
-        if (TransformerHelper::isTransformer($val)) {
-            return $this->parseTransformer($val, $data, $key);
-        }
-
-        return $val;
+        return (array)$this->prepareTransformer($transformer, $data, null, $extra);
     }
 
     /**
      * @param callable $transformer
-     * @param $val
-     * @param $data
+     * @param array $data
      * @param string|null $key
+     * @param array $params
+     * @return array
+     */
+    public function prepareData(callable $transformer, array $data, string $key = null, array $params = []): array
+    {
+        foreach ($data as $k => $val) {
+            $newKey = ($key ? $key . '.' : '') . $k;
+            if (!$this->includeValue($transformer, $newKey)) {
+                unset($data[$k]);
+                continue;
+            }
+
+            $data[$k] = $this->prepareValue($transformer, $val, $newKey, $params);
+        }
+
+        return $this->filterFields($data);
+    }
+
+    /**
+     * @param callable $transformer
+     * @param $value
+     * @param string|null $key
+     * @param array $params
      * @return mixed
      */
-    public function parseNestedValue(callable $transformer, $val, $data, string $key = null)
+    protected function prepareValue(callable $transformer, $value, string $key = null, array $params = [])
     {
-        if (TransformerHelper::isTransformer($val)) {
-            return $this->parseTransformer($val, $data, $key);
+        if ($value instanceof ResourceInterface) {
+            return $this->prepareResource($value, $key, $params);
         }
 
-        if (is_array($val)) {
-            foreach ($val as $k => $v) {
-                $newKey = $key . '.' . $k;
-
-                if (!$this->includeValue($transformer, $newKey)) {
-                    unset($val[$k]);
-                    continue;
-                }
-
-                $val[$k] = $this->parseNestedValue($transformer, $v, $val, $newKey);
-            }
+        if (TransformerHelper::isClosure($value)) {
+            return $this->prepareClosure($value, $key, $params);
         }
 
-        return $val;
+        if (TransformerHelper::isTransformer($value)) {
+            return $this->prepareTransformer($value, $key, $params);
+        }
+
+        if (is_array($value)) {
+            return $this->prepareData($transformer, $value, $key, $params);
+        }
+
+        return $value;
+    }
+
+    /**
+     * @param ResourceInterface $transformer
+     * @param string $key
+     * @param array $params
+     * @return mixed
+     */
+    protected function prepareResource(
+        ResourceInterface $transformer,
+        string $key,
+        array $params = []
+    ) {
+        return call_user_func_array(
+            $transformer,
+            array_merge(
+                [$this, $key],
+                $params
+            )
+        );
+    }
+
+    /**
+     * @param \Closure $transformer
+     * @param string|null $key
+     * @param array $extra
+     * @return mixed
+     */
+    protected function prepareClosure(\Closure $transformer, string $key = null, array $extra = [])
+    {
+        $args = ['scope' => $this, 'identifier' => $key];
+
+        $args = ArgumentHelper::closure(
+            $transformer,
+            array_merge(
+                $extra,
+                $args
+            )
+        );
+
+        return call_user_func_array(
+            $transformer,
+            array_merge(
+                $args
+            )
+        );
     }
 
     /**
@@ -245,22 +268,33 @@ class Scope
      * @param array $extra
      * @return mixed
      */
-    public function parseTransformer(callable $transformer, $data, string $key = null, array $extra = [])
+    protected function prepareTransformer(callable $transformer, $data, string $key = null, array $extra = [])
     {
-        $args = [$data, $this, $key];
+        if ($transformer instanceof TransformerInterface) {
+            $args = ArgumentHelper::callable(
+                $transformer,
+                array_merge(
+                    $extra,
+                    [
+                        'scope' => $this,
+                        'identifier' => $key
+                    ]
+                )
+            );
 
-        if (!empty($extra)) {
-            try {
-                $args = array_merge(
-                    $args,
-                    $this->validParams($transformer, $extra)
-                );
-            } catch (\ReflectionException $e) {
-                // Sorry
-            }
+            return call_user_func_array(
+                $transformer,
+                array_merge(
+                    [$data, $this, $key],
+                    $args
+                )
+            );
         }
 
-        return call_user_func_array($transformer, $args);
+        return call_user_func(
+            $transformer,
+            $data
+        );
     }
 
     /**
@@ -269,8 +303,8 @@ class Scope
      */
     public function childScope(string $identifier): Scope
     {
-        $parentScopes = $this->getParentScopes();
-        $parentScopes[] = $this->getScopeIdentifier();
+        $parentScopes = $this->parentScopes;
+        $parentScopes[] = $this->scopeIdentifier;
 
         return new static(
             $this->getTransform(),
@@ -297,7 +331,7 @@ class Scope
      *
      * @return array
      */
-    public function filterFields(array $data): array
+    protected function filterFields(array $data): array
     {
         $fields = $this->getFilterFields();
 
@@ -323,7 +357,7 @@ class Scope
     protected function getFilterFields()
     {
         return $this->transform->getField(
-            $this->getScopeIdentifier()
+            $this->scopeIdentifier
         );
     }
 

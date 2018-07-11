@@ -13,7 +13,7 @@ use Flipbox\Transform\Scope;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
- * @since 1.0.0
+ * @since 3.0.0
  */
 interface TransformerInterface
 {
@@ -25,8 +25,8 @@ interface TransformerInterface
     /**
      * @param $data
      * @param Scope $scope
-     * @param string $identifier
-     * @return mixed
+     * @param string|null $identifier
+     * @return array
      */
-    public function __invoke($data, Scope $scope, string $identifier = null);
+    public function __invoke($data, Scope $scope, string $identifier = null): array;
 }
