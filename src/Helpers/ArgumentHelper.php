@@ -9,6 +9,8 @@
 
 namespace Flipbox\Transform\Helpers;
 
+use Flipbox\Transform\Transformers\TransformerInterface;
+
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>
  * @since 3.0.0
@@ -29,9 +31,14 @@ class ArgumentHelper
         }
 
         try {
-            return self::interpretFunction(
+            list($args, $extra) = self::interpretFunction(
                 new \ReflectionFunction($transformer),
                 $params
+            );
+
+            return array_merge(
+                $args,
+                $extra
             );
         } catch (\ReflectionException $e) {
             // Sorry
@@ -48,7 +55,7 @@ class ArgumentHelper
      * @param string $method
      * @return array
      */
-    public static function callable(callable $transformer, array $params, string $method = 'transform'): array
+    public static function callable(callable $transformer, array $params, string $method = '__invoke'): array
     {
         if (TransformerHelper::isClosure($transformer)) {
             return static::closure($transformer, $params);
@@ -59,9 +66,52 @@ class ArgumentHelper
         }
 
         try {
-            return self::interpretFunction(
+            if (is_array($transformer)) {
+                $method = $transformer[1] ?? $method;
+                $transformer = $transformer[0] ?? $transformer;
+            }
+
+            list($one) = self::interpretFunction(
                 new \ReflectionMethod($transformer, $method),
                 $params
+            );
+
+            return $one;
+        } catch (\ReflectionException $e) {
+            // Sorry
+        }
+
+        return [];
+    }
+
+    /**
+     * Extracts all of the valid arguments for a provided callable.
+     *
+     * @param TransformerInterface $transformer
+     * @param array $params
+     * @return array
+     */
+    public static function transformer(TransformerInterface $transformer, array $params): array
+    {
+        if (empty($params)) {
+            return $params;
+        }
+
+        try {
+            list($extra, $variadic) = self::interpretFunction(
+                new \ReflectionMethod($transformer, 'transform'),
+                $params
+            );
+
+            list($args) = self::interpretFunction(
+                new \ReflectionMethod($transformer, '__invoke'),
+                $params
+            );
+
+            return array_merge(
+                $args,
+                $extra,
+                $variadic
             );
         } catch (\ReflectionException $e) {
             // Sorry
@@ -128,15 +178,19 @@ class ArgumentHelper
     /**
      * @param \ReflectionFunctionAbstract $function
      * @param array $params
+     * @param array $ignore
      * @return array
      * @throws \InvalidArgumentException
      */
-    private static function interpretFunction(\ReflectionFunctionAbstract $function, array $params): array
-    {
-        $args = $missing = [];
+    private static function interpretFunction(
+        \ReflectionFunctionAbstract $function,
+        array $params,
+        array $ignore = []
+    ): array {
+        $args = $missing = $variadic = [];
         foreach ($function->getParameters() as $param) {
             $name = $param->name;
-            if (true === in_array($name, ['data'], true)) {
+            if (true === in_array($name, $ignore, true)) {
                 continue;
             }
 
@@ -145,12 +199,12 @@ class ArgumentHelper
             } elseif ($param->isDefaultValueAvailable()) {
                 $args[$name] = $param->getDefaultValue();
             } elseif ($param->isVariadic()) {
-                $args = array_merge(
-                    $args,
-                    ${$param->name}
+                $variadic = array_diff_key(
+                    ${$param->name},
+                    $args
                 );
             } else {
-                $missing[$name] = $name;
+                $missing[] = $name;
             }
         }
 
@@ -161,7 +215,7 @@ class ArgumentHelper
             ));
         }
 
-        return $args;
+        return [array_values($args), $variadic];
     }
 
     /**

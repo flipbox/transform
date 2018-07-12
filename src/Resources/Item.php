@@ -29,6 +29,5 @@ class Item extends AbstractResource
             $this->data,
             $params
         );
-
     }
 }

@@ -24,16 +24,18 @@ class TransformerHelper
      */
     public static function isClosure($transformer): bool
     {
-        return $transformer instanceof Closure;
+        return is_object($transformer) && $transformer instanceof Closure;
     }
 
     /**
      * @param $transformer
      * @return bool
      */
-    public static function isCallable($transformer): bool
+    public static function isInvokable($transformer): bool
     {
-        return is_object($transformer) && is_callable($transformer);
+        return is_object($transformer) &&
+            is_callable($transformer) &&
+            !$transformer instanceof Closure;
     }
 
     /**
@@ -42,7 +44,7 @@ class TransformerHelper
      */
     public static function isTransformer($transformer): bool
     {
-        return static::isClosure($transformer) || static::isCallable($transformer);
+        return static::isClosure($transformer) || static::isInvokable($transformer);
     }
 
     /**
@@ -51,9 +53,11 @@ class TransformerHelper
      */
     public static function isTransformerClass($transformer): bool
     {
-        return is_string($transformer) && (
-                is_subclass_of($transformer, TransformerInterface::class) ||
-                is_callable($transformer, '__invoke')
+        return is_string($transformer) &&
+            class_exists($transformer) &&
+            (
+                method_exists($transformer, '__invoke') ||
+                is_callable([$transformer, '__invoke'])
             );
     }
 

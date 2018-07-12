@@ -41,5 +41,5 @@ abstract class AbstractResource implements ResourceInterface
     /**
      * @inheritdoc
      */
-    public abstract function __invoke(Scope $scope, string $identifier = null, ...$params);
+    abstract public function __invoke(Scope $scope, string $identifier = null, ...$params);
 }

@@ -23,10 +23,8 @@ interface TransformerInterface
     public function getIncludes(): array;
 
     /**
-     * @param $data
      * @param Scope $scope
-     * @param string|null $identifier
      * @return array
      */
-    public function __invoke($data, Scope $scope, string $identifier = null): array;
+    public function __invoke(Scope $scope): array;
 }

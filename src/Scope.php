@@ -162,7 +162,14 @@ class Scope
      */
     public function transform(callable $transformer, $data, array $extra = []): array
     {
-        return (array)$this->prepareTransformer($transformer, $data, null, $extra);
+        return (array)$this->prepareValue(
+            $transformer,
+            null,
+            array_merge(
+                $extra,
+                ['data' => $data]
+            )
+        );
     }
 
     /**
@@ -181,35 +188,32 @@ class Scope
                 continue;
             }
 
-            $data[$k] = $this->prepareValue($transformer, $val, $newKey, $params);
+            if (is_callable($val)) {
+                $data[$k] = $this->prepareCallable($val, $newKey, $params);
+            } elseif (is_array($val)) {
+                $data[$k] = $this->prepareData($transformer, $val, $newKey, $params);
+            } else {
+                $data[$k] = $this->prepareValue($val, $newKey, $params);
+            }
         }
 
         return $this->filterFields($data);
     }
 
     /**
-     * @param callable $transformer
      * @param $value
      * @param string|null $key
      * @param array $params
      * @return mixed
      */
-    protected function prepareValue(callable $transformer, $value, string $key = null, array $params = [])
+    protected function prepareValue($value, string $key = null, array $params = [])
     {
         if ($value instanceof ResourceInterface) {
             return $this->prepareResource($value, $key, $params);
         }
 
-        if (TransformerHelper::isClosure($value)) {
-            return $this->prepareClosure($value, $key, $params);
-        }
-
-        if (TransformerHelper::isTransformer($value)) {
-            return $this->prepareTransformer($value, $key, $params);
-        }
-
-        if (is_array($value)) {
-            return $this->prepareData($transformer, $value, $key, $params);
+        if (is_callable($value)) {
+            return $this->prepareCallable($value, $key, $params);
         }
 
         return $value;
@@ -236,64 +240,95 @@ class Scope
     }
 
     /**
+     * @param callable $callable
+     * @param string|null $key
+     * @param array $params
+     * @return mixed
+     */
+    protected function prepareCallable(
+        callable $callable,
+        string $key = null,
+        array $params = []
+    ) {
+        if ($callable instanceof TransformerInterface) {
+            return $this->prepareTransformer($callable, $key, $params);
+        }
+
+        if (TransformerHelper::isClosure($callable)) {
+            return $this->prepareClosure($callable, $key, $params);
+        }
+
+        $args = ArgumentHelper::callable(
+            $callable,
+            array_merge(
+                $params,
+                [
+                    'scope' => $this,
+                    'identifier' => $key
+                ]
+            )
+        );
+
+        return call_user_func_array(
+            $callable,
+            $args
+        );
+    }
+
+    /**
      * @param \Closure $transformer
      * @param string|null $key
      * @param array $extra
      * @return mixed
      */
-    protected function prepareClosure(\Closure $transformer, string $key = null, array $extra = [])
-    {
-        $args = ['scope' => $this, 'identifier' => $key];
-
+    protected function prepareClosure(
+        \Closure $transformer,
+        string $key = null,
+        array $extra = []
+    ) {
         $args = ArgumentHelper::closure(
             $transformer,
             array_merge(
                 $extra,
-                $args
+                [
+                    'scope' => $this,
+                    'identifier' => $key
+                ]
             )
         );
 
         return call_user_func_array(
             $transformer,
-            array_merge(
-                $args
-            )
+            $args
         );
     }
 
     /**
-     * @param callable $transformer
+     * @param TransformerInterface $transformer
      * @param $data
      * @param string|null $key
      * @param array $extra
      * @return mixed
      */
-    protected function prepareTransformer(callable $transformer, $data, string $key = null, array $extra = [])
-    {
-        if ($transformer instanceof TransformerInterface) {
-            $args = ArgumentHelper::callable(
-                $transformer,
-                array_merge(
-                    $extra,
-                    [
-                        'scope' => $this,
-                        'identifier' => $key
-                    ]
-                )
-            );
-
-            return call_user_func_array(
-                $transformer,
-                array_merge(
-                    [$data, $this, $key],
-                    $args
-                )
-            );
-        }
-
-        return call_user_func(
+    protected function prepareTransformer(
+        TransformerInterface $transformer,
+        string $key = null,
+        array $extra = []
+    ) {
+        $args = ArgumentHelper::transformer(
             $transformer,
-            $data
+            array_merge(
+                $extra,
+                [
+                    'scope' => $this,
+                    'identifier' => $key
+                ]
+            )
+        );
+
+        return call_user_func_array(
+            $transformer,
+            $args
         );
     }
 

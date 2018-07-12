@@ -81,22 +81,18 @@ abstract class ArrayTransformer implements TransformerInterface
     }
 
     /**
-     * @param $data
-     * @param Scope $scope
-     * @param string|null $identifier
+     * The $params consist of all the attributes found on the Class::transform() method.
+     *
      * @param mixed ...$params
      * @return array
      * @throws \ReflectionException
      */
-    public function __invoke($data, Scope $scope, string $identifier = null, ...$params): array
+    public function __invoke(Scope $scope, ...$params): array
     {
         // Construct an associative array
         $args = ArgumentHelper::mergeCallable(
             $this,
-            array_merge(
-                [$data],
-                $params
-            )
+            $params
         );
 
         /** @var array $data */
@@ -105,6 +101,6 @@ abstract class ArrayTransformer implements TransformerInterface
             $args
         );
 
-        return $scope->prepareData($this, $data, $identifier, $args);
+        return $scope->prepareData($this, $data, null, $args);
     }
 }
