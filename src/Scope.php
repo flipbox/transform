@@ -188,9 +188,7 @@ class Scope
                 continue;
             }
 
-            if (is_callable($val)) {
-                $data[$k] = $this->prepareCallable($val, $newKey, $params);
-            } elseif (is_array($val)) {
+            if (is_array($val) && !is_callable($val)) {
                 $data[$k] = $this->prepareData($transformer, $val, $newKey, $params);
             } else {
                 $data[$k] = $this->prepareValue($val, $newKey, $params);
