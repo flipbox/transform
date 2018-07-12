@@ -195,7 +195,7 @@ class ArgumentHelper
             }
 
             if (array_key_exists($name, $params)) {
-                $args[$name] = static::argType($param, $params[$name]);
+                $args[$name] = self::argType($param, $params[$name]);
             } elseif ($param->isDefaultValueAvailable()) {
                 $args[$name] = $param->getDefaultValue();
             } elseif ($param->isVariadic()) {
