@@ -1,6 +1,10 @@
 # Changelog
 All Notable changes to `flipboxdigital\transform` will be documented in this file
 
+## 3.0.0 - 2018-07-11
+### Changed
+- Refactored many aspect of this package.  The core concept remains the same, but code has been trimmed and, assumptions have been removed and it's much more flexible and easy to use.
+
 ## 2.2.0 - 2018-06-11
 ### Added
 - `Scope::parseNestedValue` should be used when parsing nested values as it will handle includes, excludes gracefully 
