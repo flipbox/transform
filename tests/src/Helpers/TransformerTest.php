@@ -251,6 +251,58 @@ class TransformerTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    /**
+     * We're looking for a full class name which, when created, can be a callable
+     *
+     * @test
+     */
+    public function resolveTest()
+    {
+        $data = $this->transformerData();
+
+        $this->assertNull(
+            TransformerHelper::resolve($data[0])
+        );
+
+        $this->assertInstanceOf(
+            \Closure::class,
+            TransformerHelper::resolve($data[1])
+        );
+
+        $this->assertInstanceOf(
+            TestTransformer::class,
+            TransformerHelper::resolve($data[2])
+        );
+
+        $this->assertInstanceOf(
+            TestTransformer::class,
+            TransformerHelper::resolve($data[3])
+        );
+
+        $this->assertInstanceOf(
+            InheritTransformer::class,
+            TransformerHelper::resolve($data[4])
+        );
+
+        $this->assertInstanceOf(
+            InheritTransformer::class,
+            TransformerHelper::resolve($data[5])
+        );
+
+        $this->assertNull(
+            TransformerHelper::resolve($data[6])
+        );
+
+        $this->assertNull(
+            TransformerHelper::resolve($data[7])
+        );
+
+        $this->assertEquals(
+            $data[8],
+            TransformerHelper::resolve($data[8])
+        );
+    }
+
 
     protected function transformerData()
     {

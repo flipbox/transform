@@ -63,11 +63,11 @@ class TransformerHelper
 
     /**
      * @param $transformer
-     * @return null|callable|TransformerInterface
+     * @return null|callable
      */
     public static function resolve($transformer)
     {
-        if (static::isTransformer($transformer)) {
+        if (is_callable($transformer)) {
             return $transformer;
         }
 
