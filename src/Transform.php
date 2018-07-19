@@ -265,7 +265,7 @@ class Transform
      * @param callable $transformer
      * @param $data
      * @param array $extra
-     * @return mixed
+     * @return array
      */
     public function item(callable $transformer, $data, array $extra = []): array
     {

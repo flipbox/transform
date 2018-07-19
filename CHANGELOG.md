@@ -1,6 +1,10 @@
 # Changelog
 All Notable changes to `flipboxdigital\transform` will be documented in this file
 
+## Unreleased
+### Changed
+- Docblocks return types to improve code hinting
+
 ## 3.0.0 - 2018-07-11
 ### Changed
 - Refactored many aspect of this package.  The core concept remains the same, but code has been trimmed and, assumptions have been removed and it's much more flexible and easy to use.

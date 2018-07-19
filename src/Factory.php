@@ -34,7 +34,7 @@ class Factory
      * @param callable $transformer
      * @param $data
      * @param array $extra
-     * @return array|null
+     * @return mixed
      */
     public static function item(callable $transformer, $data, array $extra = [])
     {
