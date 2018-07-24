@@ -210,7 +210,7 @@ class Scope
             return $this->prepareResource($value, $key, $params);
         }
 
-        if (is_callable($value)) {
+        if (TransformerHelper::isTransformable($value)) {
             return $this->prepareCallable($value, $key, $params);
         }
 

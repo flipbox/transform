@@ -20,69 +20,59 @@ use Flipbox\Transform\Tests\TestTransformer;
  */
 class TransformerTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     *
-     *
-     * @test
-     */
-    public function createResolverTest()
-    {
-        $this->assertEquals(false, TransformerHelper::isTransformer('foo'));
-        $this->assertEquals(true, TransformerHelper::isTransformer(function() {}));
-    }
 
     /**
-     * We're looking for an anonymous function only
+     * We're looking for anything that can be transformed
      *
      * @test
      */
-    public function isTransformer()
+    public function isTransformerTest()
     {
         $data = $this->transformerData();
 
         $this->assertEquals(
             false,
-            TransformerHelper::isTransformer($data[0])
+            TransformerHelper::isTransformable($data[0])
         );
 
         $this->assertEquals(
             true,
-            TransformerHelper::isTransformer($data[1])
+            TransformerHelper::isTransformable($data[1])
         );
 
         $this->assertEquals(
             true,
-            TransformerHelper::isTransformer($data[2])
+            TransformerHelper::isTransformable($data[2])
         );
 
         $this->assertEquals(
             false,
-            TransformerHelper::isTransformer($data[3])
+            TransformerHelper::isTransformable($data[3])
         );
 
         $this->assertEquals(
             true,
-            TransformerHelper::isTransformer($data[4])
+            TransformerHelper::isTransformable($data[4])
         );
 
         $this->assertEquals(
             false,
-            TransformerHelper::isTransformer($data[5])
+            TransformerHelper::isTransformable($data[5])
         );
 
         $this->assertEquals(
             false,
-            TransformerHelper::isTransformer($data[6])
+            TransformerHelper::isTransformable($data[6])
         );
 
         $this->assertEquals(
             false,
-            TransformerHelper::isTransformer($data[7])
+            TransformerHelper::isTransformable($data[7])
         );
 
         $this->assertEquals(
-            false,
-            TransformerHelper::isTransformer($data[8])
+            true,
+            TransformerHelper::isTransformable($data[8])
         );
     }
 
@@ -193,6 +183,61 @@ class TransformerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(
             false,
             TransformerHelper::isInvokable($data[8])
+        );
+    }
+
+    /**
+     * We're looking for an anonymous function only
+     *
+     * @test
+     */
+    public function isCallableArrayTest()
+    {
+        $data = $this->transformerData();
+
+        $this->assertEquals(
+            false,
+            TransformerHelper::isCallableArray($data[0])
+        );
+
+        $this->assertEquals(
+            false,
+            TransformerHelper::isCallableArray($data[1])
+        );
+
+        $this->assertEquals(
+            false,
+            TransformerHelper::isCallableArray($data[2])
+        );
+
+        $this->assertEquals(
+            false,
+            TransformerHelper::isCallableArray($data[3])
+        );
+
+        $this->assertEquals(
+            false,
+            TransformerHelper::isCallableArray($data[4])
+        );
+
+        $this->assertEquals(
+            false,
+            TransformerHelper::isCallableArray($data[5])
+        );
+
+        $this->assertEquals(
+            false,
+            TransformerHelper::isCallableArray($data[6])
+        );
+
+        $this->assertEquals(
+            false,
+            TransformerHelper::isCallableArray($data[7])
+        );
+
+        $this->assertEquals(
+            true,
+            TransformerHelper::isCallableArray($data[8])
         );
     }
 

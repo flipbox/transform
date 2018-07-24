@@ -42,9 +42,32 @@ class TransformerHelper
      * @param $transformer
      * @return bool
      */
+    public static function isCallableArray($transformer): bool
+    {
+        return is_array($transformer) && is_callable($transformer);
+    }
+
+    /**
+     * @param $transformer
+     * @return bool
+     *
+     * @deprecated Use TransformerHelper::isTransformable()
+     */
     public static function isTransformer($transformer): bool
     {
         return static::isClosure($transformer) || static::isInvokable($transformer);
+    }
+
+    /**
+     * @param $transformer
+     * @return bool
+     */
+    public static function isTransformable($transformer): bool
+    {
+        return
+            static::isClosure($transformer) ||
+            static::isInvokable($transformer) ||
+            static::isCallableArray($transformer);
     }
 
     /**

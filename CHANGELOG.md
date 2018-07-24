@@ -3,7 +3,11 @@ All Notable changes to `flipboxdigital\transform` will be documented in this fil
 
 ## Unreleased
 ### Changed
-- Docblocks return types to improve code hinting
+- Improved docblock return types for enhanced IDE code hinting
+- `TransformerHelper::isTransformer()` has been deprecated.  Use `TransformerHelper::isTransformable()`
+
+### Fixed
+- Some string values such as `trim` or `system` are technically callable, but mistaken for a nested callable.
 
 ## 3.0.0 - 2018-07-11
 ### Changed
