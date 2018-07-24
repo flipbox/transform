@@ -1,7 +1,7 @@
 # Changelog
 All Notable changes to `flipboxdigital\transform` will be documented in this file
 
-## Unreleased
+## 3.0.1 - 2018-07-24
 ### Changed
 - Improved docblock return types for enhanced IDE code hinting
 - `TransformerHelper::isTransformer()` has been deprecated.  Use `TransformerHelper::isTransformable()`

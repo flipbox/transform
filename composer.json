@@ -1,7 +1,7 @@
 {
   "name": "flipboxdigital/transform",
   "description": "Transform data structures",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "keywords": [
     "transform",
     "flipbox",
@@ -23,19 +23,5 @@
     "psr-4": {
       "Flipbox\\Transform\\Tests\\": "tests/src/"
     }
-  },
-  "config": {
-    "optimize-autoloader": true
-  },
-  "extra": {
-    "branch-alias": {
-      "dev-master": "2.0.x-dev"
-    }
-  },
-  "repositories": [
-    {
-      "type": "composer",
-      "url": "https://packagist.org"
-    }
-  ]
+  }
 }
