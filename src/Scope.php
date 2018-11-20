@@ -158,11 +158,11 @@ class Scope
      * @param callable $transformer
      * @param mixed $data
      * @param array $extra
-     * @return array
+     * @return mixed
      */
-    public function transform(callable $transformer, $data, array $extra = []): array
+    public function transform(callable $transformer, $data, array $extra = [])
     {
-        return (array)$this->prepareValue(
+        return $this->prepareValue(
             $transformer,
             null,
             array_merge(

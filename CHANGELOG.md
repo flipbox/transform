@@ -1,6 +1,10 @@
 # Changelog
 All Notable changes to `flipboxdigital\transform` will be documented in this file
 
+## Unreleased
+### Fixed
+- `Scope::transform()` would always return an array when it's possible to return anything. 
+
 ## 3.0.1 - 2018-07-24
 ### Changed
 - Improved docblock return types for enhanced IDE code hinting
