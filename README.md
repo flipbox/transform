@@ -32,7 +32,7 @@ $raw = [
     'dateUpdated' => new \DateTime()
 ];
 
-$data = Flipbox\Transform\Factory::item()
+$data = flipbox\transform\Factory::item()
     ->transform(
         function($data) {
 
