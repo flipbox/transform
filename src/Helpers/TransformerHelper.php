@@ -7,10 +7,10 @@
  * @license   https://github.com/flipbox/transform/blob/master/LICENSE
  */
 
-namespace Flipbox\Transform\Helpers;
+namespace flipbox\transform\helpers;
 
 use Closure;
-use Flipbox\Transform\Transformers\TransformerInterface;
+use flipbox\transform\transformers\TransformerInterface;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>

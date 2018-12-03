@@ -7,9 +7,9 @@
  * @license   https://github.com/flipbox/transform/blob/master/LICENSE
  */
 
-namespace Flipbox\Transform;
+namespace flipbox\transform;
 
-use Flipbox\Transform\Helpers\ObjectHelper;
+use flipbox\transform\helpers\ObjectHelper;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>

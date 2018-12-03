@@ -1,8 +1,8 @@
 <?php
 
-namespace Flipbox\Transform\Tests;
+namespace flipbox\transform\tests;
 
-use Flipbox\Transform\Transformers\AbstractTransformer;
+use flipbox\transform\transformers\AbstractTransformer;
 
 class InheritTransformer extends AbstractTransformer
 {

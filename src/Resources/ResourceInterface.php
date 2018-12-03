@@ -7,9 +7,9 @@
  * @license   https://github.com/flipbox/transform/blob/master/LICENSE
  */
 
-namespace Flipbox\Transform\Resources;
+namespace flipbox\transform\resources;
 
-use Flipbox\Transform\Scope;
+use flipbox\transform\Scope;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>

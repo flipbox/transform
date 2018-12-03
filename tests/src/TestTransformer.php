@@ -1,6 +1,6 @@
 <?php
 
-namespace Flipbox\Transform\Tests;
+namespace flipbox\transform\tests;
 
 class TestTransformer
 {

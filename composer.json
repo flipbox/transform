@@ -1,7 +1,7 @@
 {
   "name": "flipboxdigital/transform",
   "description": "Transform data structures",
-  "version": "3.0.2",
+  "version": "3.1.0",
   "keywords": [
     "transform",
     "flipbox",
@@ -16,12 +16,12 @@
   },
   "autoload": {
     "psr-4": {
-      "Flipbox\\Transform\\": "src/"
+      "flipbox\\transform\\": "src/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "Flipbox\\Transform\\Tests\\": "tests/src/"
+      "flipbox\\transform\\tests\\": "tests/src/"
     }
   }
 }

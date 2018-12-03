@@ -7,12 +7,12 @@
  * @license   https://github.com/flipbox/transform/blob/master/LICENSE
  */
 
-namespace Flipbox\Transform;
+namespace flipbox\transform;
 
-use Flipbox\Transform\Helpers\ArgumentHelper;
-use Flipbox\Transform\Helpers\TransformerHelper;
-use Flipbox\Transform\Resources\ResourceInterface;
-use Flipbox\Transform\Transformers\TransformerInterface;
+use flipbox\transform\helpers\ArgumentHelper;
+use flipbox\transform\helpers\TransformerHelper;
+use flipbox\transform\resources\ResourceInterface;
+use flipbox\transform\transformers\TransformerInterface;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>

@@ -7,12 +7,12 @@
  * @license   https://github.com/flipbox/transform/blob/master/LICENSE
  */
 
-namespace Flipbox\Transform\Tests\Helpers;
+namespace flipbox\transform\tests\helpers;
 
-use Flipbox\Transform\Helpers\TransformerHelper;
-use Flipbox\Transform\Tests\DummyClass;
-use Flipbox\Transform\Tests\InheritTransformer;
-use Flipbox\Transform\Tests\TestTransformer;
+use flipbox\transform\helpers\TransformerHelper;
+use flipbox\transform\tests\DummyClass;
+use flipbox\transform\tests\InheritTransformer;
+use flipbox\transform\tests\TestTransformer;
 
 /**
  * @author Flipbox Factory <hello@flipboxfactory.com>

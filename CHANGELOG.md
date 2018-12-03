@@ -1,6 +1,10 @@
 # Changelog
 All Notable changes to `flipboxdigital\transform` will be documented in this file
 
+## 3.1.0 - 12-03-18
+### Changed
+- Change namespaces to lowercase
+
 ## 3.0.2 - 2018-11-20
 ### Fixed
 - `Scope::transform()` would always return an array when it's possible to return anything. 
